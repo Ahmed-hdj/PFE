@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFE</title>
+</head>
+
+<body class="open-sans" style="font-family: 'Open Sans', sans-serif;">
+    <div class="pt-24">
+        <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow-md z-50">
+            <img src="images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
+            <div class="relative w-1/2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="search" placeholder="Search for a Place"
+                        class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
+                    <button type="submit"
+                        class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="showLoginModal()"
+                class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap cursor-pointer">
+                Se Connecter
+            </button>
+        </div>
+    </div>
+
+    <div
+        class="relative h-[75vh] w-full before:absolute before:inset-0 before:bg-black/65 before:z-10 after:absolute after:inset-0 after:flex after:items-center after:justify-center after:text-white after:text-5xl after:font-bold after:z-20 after:content-['Welcome_to_Algeria']">
+        <video src="images and videos/Algeria from Above 4K UHD - A Cinematic Drone Journey (1).mp4" loop muted autoplay
+            class="w-full h-full object-cover" playbackRate="1.5"></video>
+    </div>
+
+    <div class="container mx-auto px-4 py-16 max-w-[1024px]"
+        style="padding-top:0;margin-top:-43px;position:relative;z-index:10;">
+
+
+        <div class="grid gap-8">
+            <!-- First Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Cultural and Heritage Card -->
+                <a href="/cultural-heritage"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#FFE5D9] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-landmark text-3xl text-[#FF7D5C] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Cultural and Heritage</h3>
+                </a>
+
+                <!-- Religious Card -->
+                <a href="/religious"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#E6F7FF] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-mosque text-3xl text-[#1890FF] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Religious</h3>
+                </a>
+
+                <!-- Beaches Card -->
+                <a href="/beaches"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#FFF7E6] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-umbrella-beach text-3xl text-[#FFA940] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Beaches</h3>
+                </a>
+
+                <!-- Desert Card -->
+                <a href="/desert"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#FFF1F0] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-sun text-3xl text-[#FF4D4F] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Desert</h3>
+                </a>
+            </div>
+
+            <!-- Second Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                <!-- Museums Card -->
+                <a href="/museums"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#F0F5FF] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-museum text-3xl text-[#2F54EB] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Museums</h3>
+                </a>
+
+                <!-- Shopping Card -->
+                <a href="/shopping"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#FFF0F6] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-shopping-bag text-3xl text-[#EB2F96] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Shopping</h3>
+                </a>
+
+                <!-- Nature Card -->
+                <a href="/nature"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#F6FFED] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-tree text-3xl text-[#52C41A] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Nature</h3>
+                </a>
+
+                <!-- Sport Card -->
+                <a href="/sport"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#E6FFFB] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-running text-3xl text-[#13C2C2] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Sport</h3>
+                </a>
+
+                <!-- Amusement Card -->
+                <a href="/amusement"
+                    class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer group border-[1px] border-gray-200 max-w[224px]">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-[#F9F0FF] rounded-full flex items-center justify-center group-hover:bg-green-500 transition-all duration-300">
+                        <i
+                            class="fas fa-ticket-alt text-3xl text-[#722ED1] group-hover:text-white transition-colors duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Amusement</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Cities Section -->
+    <div class="container mx-auto px-4 py-16 max-w-[1024px]">
+        <h2 class="text-2xl font-bold mb-8">Villes populaires de Algérie</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Alger Card -->
+            <div class="relative group cursor-pointer">
+                <div class="relative overflow-hidden rounded-lg">
+                    <img src="https://th.bing.com/th/id/R.d7d1306a7fa6ab5e5dbb9636f708e7fb?rik=FtrjcYqgIx%2fFvA&pid=ImgRaw&r=0"
+                        alt="Alger"
+                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <button
+                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
+                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold">Alger</h3>
+                    <p class="text-gray-600">Algiers Province, Algérie</p>
+                </div>
+            </div>
+
+            <!-- Oran Card -->
+            <div class="relative group cursor-pointer">
+                <div class="relative overflow-hidden rounded-lg">
+                    <img src="https://www.algerie-eco.com/wp-content/uploads/2020/04/oran.jpg" alt="Oran"
+                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <button
+                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
+                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold">Oran</h3>
+                    <p class="text-gray-600">Oran Province, Algérie</p>
+                </div>
+            </div>
+
+            <!-- Constantine Card -->
+            <div class="relative group cursor-pointer">
+                <div class="relative overflow-hidden rounded-lg">
+                    <img src="https://th.bing.com/th/id/R.44fb16e17e9cca7658945e24d59f44e1?rik=nJCVvSpPAsH9UA&pid=ImgRaw&r=0"
+                        alt="Constantine"
+                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <button
+                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
+                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold">Constantine</h3>
+                    <p class="text-gray-600">Constantine Province, Algérie</p>
+                </div>
+            </div>
+
+            <!-- Bejaia Card -->
+            <div class="relative group cursor-pointer">
+                <div class="relative overflow-hidden rounded-lg">
+                    <img src="https://1.bp.blogspot.com/-RNAnnRPsxS0/WUZe2ZYN57I/AAAAAAAAANY/IknXmb36R9U9UUwt6OJisHyTNHUpgbqMwCEwYBhgL/s1600/Bejaia-1.jpg"
+                        alt="Bejaia"
+                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                    <button
+                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
+                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold">Bejaia</h3>
+                    <p class="text-gray-600">Bejaia Province, Algérie</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Popular Cities Section -->
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Connexion</h2>
+                <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Se Connecter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
