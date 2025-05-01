@@ -41,7 +41,7 @@
             class="w-full h-full object-cover" playbackRate="1.5"></video>
     </div>
 
-    <div class="container mx-auto px-4 py-16 max-w-[1024px]"
+    <div class="container mx-auto px-4 py-16 max-w-[1152px]"
         style="padding-top:0;margin-top:-43px;position:relative;z-index:10;">
 
 
@@ -154,78 +154,561 @@
     </div>
 
     <!-- Popular Cities Section -->
-    <div class="container mx-auto px-4 py-16 max-w-[1024px]">
+    <div class="container mx-auto px-4 py-16 max-w-[1152px]">
+        <hr class="border-t border-gray-200 mb-8">
         <h2 class="text-2xl font-bold mb-8">Villes populaires de Algérie</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Alger Card -->
-            <div class="relative group cursor-pointer">
-                <div class="relative overflow-hidden rounded-lg">
-                    <img src="https://th.bing.com/th/id/R.d7d1306a7fa6ab5e5dbb9636f708e7fb?rik=FtrjcYqgIx%2fFvA&pid=ImgRaw&r=0"
-                        alt="Alger"
-                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
-                    <button
-                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
-                        <i class="fa-regular fa-bookmark text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <h3 class="text-xl font-semibold">Alger</h3>
-                    <p class="text-gray-600">Algiers Province, Algérie</p>
-                </div>
-            </div>
+        <div class="relative">
+            <!-- Navigation Arrows -->
+            <button id="prevCity"
+                class="absolute left-[-40px] top-1/2 -translate-y-1/2 bg-white p-4 rounded-full shadow-lg hover:bg-gray-200 transition-colors z-10 cursor-pointer active:scale-95">
+                <i class="fas fa-chevron-left text-gray-700 text-xl"></i>
+            </button>
+            <button id="nextCity"
+                class="absolute right-[-40px] top-1/2 -translate-y-1/2 bg-white p-4 rounded-full shadow-lg hover:bg-gray-200 transition-colors z-10 cursor-pointer active:scale-95">
+                <i class="fas fa-chevron-right text-gray-700 text-xl"></i>
+            </button>
 
-            <!-- Oran Card -->
-            <div class="relative group cursor-pointer">
-                <div class="relative overflow-hidden rounded-lg">
-                    <img src="https://www.algerie-eco.com/wp-content/uploads/2020/04/oran.jpg" alt="Oran"
-                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
-                    <button
-                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
-                        <i class="fa-regular fa-bookmark text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <h3 class="text-xl font-semibold">Oran</h3>
-                    <p class="text-gray-600">Oran Province, Algérie</p>
-                </div>
-            </div>
+            <div class="overflow-hidden">
+                <div id="citiesContainer" class="flex transition-transform duration-300">
+                    <!-- Alger Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/alger" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://th.bing.com/th/id/R.d7d1306a7fa6ab5e5dbb9636f708e7fb?rik=FtrjcYqgIx%2fFvA&pid=ImgRaw&r=0"
+                                        alt="Alger"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Alger</h3>
+                                    <p class="text-gray-600">Algiers Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
 
-            <!-- Constantine Card -->
-            <div class="relative group cursor-pointer">
-                <div class="relative overflow-hidden rounded-lg">
-                    <img src="https://th.bing.com/th/id/R.44fb16e17e9cca7658945e24d59f44e1?rik=nJCVvSpPAsH9UA&pid=ImgRaw&r=0"
-                        alt="Constantine"
-                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
-                    <button
-                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
-                        <i class="fa-regular fa-bookmark text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <h3 class="text-xl font-semibold">Constantine</h3>
-                    <p class="text-gray-600">Constantine Province, Algérie</p>
-                </div>
-            </div>
+                    <!-- Oran Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/oran" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://www.algerie-eco.com/wp-content/uploads/2020/04/oran.jpg"
+                                        alt="Oran"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Oran</h3>
+                                    <p class="text-gray-600">Oran Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
 
-            <!-- Bejaia Card -->
-            <div class="relative group cursor-pointer">
-                <div class="relative overflow-hidden rounded-lg">
-                    <img src="https://1.bp.blogspot.com/-RNAnnRPsxS0/WUZe2ZYN57I/AAAAAAAAANY/IknXmb36R9U9UUwt6OJisHyTNHUpgbqMwCEwYBhgL/s1600/Bejaia-1.jpg"
-                        alt="Bejaia"
-                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
-                    <button
-                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-[40px]">
-                        <i class="fa-regular fa-bookmark text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <h3 class="text-xl font-semibold">Bejaia</h3>
-                    <p class="text-gray-600">Bejaia Province, Algérie</p>
+                    <!-- Constantine Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/constantine" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://th.bing.com/th/id/R.44fb16e17e9cca7658945e24d59f44e1?rik=nJCVvSpPAsH9UA&pid=ImgRaw&r=0"
+                                        alt="Constantine"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Constantine</h3>
+                                    <p class="text-gray-600">Constantine Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Bejaia Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/bejaia" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://1.bp.blogspot.com/-RNAnnRPsxS0/WUZe2ZYN57I/AAAAAAAAANY/IknXmb36R9U9UUwt6OJisHyTNHUpgbqMwCEwYBhgL/s1600/Bejaia-1.jpg"
+                                        alt="Bejaia"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Bejaia</h3>
+                                    <p class="text-gray-600">Bejaia Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Annaba Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/annaba" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://www.ilmondodiathena.com/wp-content/uploads/2019/03/cattedrale-marsiglia-1024x632.jpg"
+                                        alt="Annaba"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Annaba</h3>
+                                    <p class="text-gray-600">Annaba Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Tamanrasset Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/tamanrasset" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://expatstraveltogether.com/wp-content/uploads/2023/09/Algeria_Sahara_Tamanrasset_People_Riding_Camel_on_the_Desert-scaled.jpg"
+                                        alt="Tamanrasset"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Tamanrasset</h3>
+                                    <p class="text-gray-600">Tamanrasset Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Tlemcen Card -->
+                    <div class="min-w-full sm:min-w-[50%] lg:min-w-[33.333%] xl:min-w-[25%] px-4">
+                        <a href="/tlemcen" class="block">
+                            <div class="relative group cursor-pointer">
+                                <div class="relative overflow-hidden rounded-lg">
+                                    <img src="https://tse1.mm.bing.net/th/id/OIP.Uq_I3gCjCp7BbLYCs2lezQHaE8?cb=iwc1&rs=1&pid=ImgDetMain"
+                                        alt="Tlemcen"
+                                        class="w-full h-64 object-cover transition-opacity duration-300 group-hover:opacity-80">
+                                    <button
+                                        class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors w-10">
+                                        <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-semibold">Tlemcen</h3>
+                                    <p class="text-gray-600">Tlemcen Province, Algérie</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+        <hr class="border-t border-gray-200 mt-8">
     </div>
     <!-- End Popular Cities Section -->
+
+    <!-- Best Attractions Section -->
+    <div class="container mx-auto px-4 py-16 max-w-[1152px]">
+        <hr class="border-t border-gray-200 mb-8">
+        <h2 class="text-2xl font-bold mb-8">Meilleures attractions à Algérie</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Jardin d'Essai Card -->
+            <a href="/jardin-essai" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="jardin">
+                            <img src="https://c1.staticflickr.com/1/276/32193070856_d5137fac58_h.jpg"
+                                alt="Le Jardin d'Essai du Hamma"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline"> Le Jardin d'Essai du Hamma</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,4</span>
+                            <span class="ml-2 text-gray-400">(887)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Jardins</p>
+                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-tree text-[#52C41A]"></i>
+                            </div>
+                            <span class="text-gray-600">Nature</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=Ovnitoring" alt="Ovnitoring"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">Ovnitoring</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">Vous pouvez vous perdre dans les différente allées de plantes et
+                            arbres du monde entier</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Basilique Notre-Dame Card -->
+            <a href="/basilique-notre-dame" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="basilique">
+                            <img src="https://tse1.mm.bing.net/th/id/OIP.C2dYgf0zNB2GfgzH3PIF5AHaEu?cb=iwc1&rs=1&pid=ImgDetMain"
+                                alt="Basilique Notre-Dame d'Afrique"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline"> Basilique Notre-Dame d'Afrique</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,5</span>
+                            <span class="ml-2 text-gray-400">(739)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Églises et cathédrales</p>
+                        <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-mosque text-[#1890FF]"></i>
+                            </div>
+                            <span class="text-gray-600">Religious</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=AlgeriaTravel" alt="AlgeriaTravel"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">AlgeriaTravel</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">Basilique d'Alger surplombant la baie de la capitale. Achevé en 1872,
+                            ce
+                            magnifique bâtiment d'architecture néo-byzantine est richement décoré à l'intérieur dans le
+                            décor hispano-mauresque. Unique...</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Casbah Card -->
+            <a href="/casbah" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="casbah">
+                            <img src="https://tse2.mm.bing.net/th/id/OIP.HesHo9l_-xaCy-jBujktJgHaE8?cb=iwc1&rs=1&pid=ImgDetMain"
+                                alt="Casbah d'Alger"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline"> Casbah d'Alger</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,3</span>
+                            <span class="ml-2 text-gray-400">(469)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Quartiers</p>
+                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                            </div>
+                            <span class="text-gray-600">Cultural and Heritage</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=520riadb" alt="520riadb"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">520riadb</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">La casbah d'Alger</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Tassili n'Ajjer Card -->
+            <a href="/tassili" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="tassili">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Tassili-nAjjer-National-Park.jpg"
+                                alt="Tassili n'Ajjer"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <div
+                                class="absolute inset-0 bg-black opacity-0 hover:opacity-25 transition-opacity duration-300">
+                            </div>
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Tassili n'Ajjer</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,7</span>
+                            <span class="ml-2 text-gray-400">(523)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Parc National</p>
+                        <div class="flex items-center mb-4 bg-[#FFF1F0] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-sun text-[#FF4D4F]"></i>
+                            </div>
+                            <span class="text-gray-600">Desert</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=DesertExplorer" alt="DesertExplorer"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">DesertExplorer</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">Un site du patrimoine mondial de l'UNESCO connu pour ses formations
+                            rocheuses spectaculaires et ses peintures rupestres préhistoriques.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Tipaza Card -->
+            <a href="/tipaza" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="tipaza">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Tipaza-Roman-Ruins.jpg"
+                                alt="Tipaza"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <div
+                                class="absolute inset-0 bg-black opacity-0 hover:opacity-25 transition-opacity duration-300">
+                            </div>
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Tipaza</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,8</span>
+                            <span class="ml-2 text-gray-400">(612)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Ruines Romaines</p>
+                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                            </div>
+                            <span class="text-gray-600">Cultural and Heritage</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=RomanHistory" alt="RomanHistory"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">RomanHistory</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">Site archéologique romain classé au patrimoine mondial de l'UNESCO,
+                            offrant une vue magnifique sur la mer Méditerranée.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Djemila Card -->
+            <a href="/djemila" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="djemila">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Djemila-Roman-Ruins.jpg"
+                                alt="Djemila"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <div
+                                class="absolute inset-0 bg-black opacity-0 hover:opacity-25 transition-opacity duration-300">
+                            </div>
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Djemila</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,9</span>
+                            <span class="ml-2 text-gray-400">(487)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Site Archéologique</p>
+                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                            </div>
+                            <span class="text-gray-600">Cultural and Heritage</span>
+                        </div>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=AncientSites" alt="AncientSites"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">AncientSites</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">Ancienne ville romaine bien préservée, classée au patrimoine mondial de
+                            l'UNESCO, située dans les montagnes de la Petite Kabylie.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <hr class="border-t border-gray-200 mt-8">
+    </div>
+    <!-- End Best Attractions Section -->
 
     <!-- Login Modal -->
     <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50">
