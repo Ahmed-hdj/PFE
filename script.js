@@ -1,12 +1,22 @@
 function showLoginModal() {
-    document.getElementById('loginModal').classList.remove('hidden');
-    document.getElementById('loginModal').classList.add('flex');
+    const modal = document.getElementById('loginModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
 function hideLoginModal() {
-    document.getElementById('loginModal').classList.add('hidden');
-    document.getElementById('loginModal').classList.remove('flex');
+    const modal = document.getElementById('loginModal');
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
 }
+
+// Close modal when clicking outside
+document.addEventListener('click', function (event) {
+    const modal = document.getElementById('loginModal');
+    if (event.target === modal) {
+        hideLoginModal();
+    }
+});
 
 // Handle search input clear button
 const searchInput = document.querySelector('input[type="search"]');
@@ -91,81 +101,91 @@ document.addEventListener('DOMContentLoaded', function () {
         jardin: [
             'https://c1.staticflickr.com/1/276/32193070856_d5137fac58_h.jpg',
             'https://th.bing.com/th/id/R.0380587d9cf79d5940352d9f9ff21a18?rik=q28o%2bkBOoQh%2b%2bQ&pid=ImgRaw&r=0',
-            'https://www.algerie-eco.com/wp-content/uploads/2018/07/jardin-dessai.jpg',
-            'https://i.pinimg.com/originals/e1/fd/1e/e1fd1e0c4cad1b34c92f34aad2f980f1.jpg',
-            'https://www.memoria.dz/wp-content/uploads/2021/01/Jardin-dessai-du-Hamma.jpg'
+            'https://www.algerie-eco.com/wp-content/uploads/2018/07/jardin-dessai.jpg'
         ],
         basilique: [
             'https://tse1.mm.bing.net/th/id/OIP.C2dYgf0zNB2GfgzH3PIF5AHaEu?cb=iwc1&rs=1&pid=ImgDetMain',
             'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/70/54/dd/basilique-notre-dame-d.jpg?w=1200&h=-1&s=1',
-            'https://upload.wikimedia.org/wikipedia/commons/c/c6/Basilique_Notre_Dame_d%27Afrique_Alger.JPG',
-            'https://live.staticflickr.com/2845/33762601661_4f2c02490b_b.jpg',
-            'https://www.algerie-monde.com/wp-content/uploads/2017/11/Basilique-Notre-Dame-dAfrique-Alger-768x512.jpg'
+            'https://upload.wikimedia.org/wikipedia/commons/c/c6/Basilique_Notre_Dame_d%27Afrique_Alger.JPG'
         ],
         casbah: [
             'https://c1.staticflickr.com/1/507/32124243810_ebb256b3a1_h.jpg',
             'https://www.elkhadra.com/fr/wp-content/uploads/2015/05/Casbah-ALGER.jpg',
-            'https://th.bing.com/th/id/R.9d06a8e732ab805b85473b2ff13525ed?rik=bgjsgCZLrQDgcw&riu=http%3a%2f%2fprescriptor.info%2fimages%2f1731.jpg&ehk=uQSIIufIPWyPnAg5%2bc%2fWZTW%2bC1mr4LIRRp8GRcAuwbA%3d&risl=&pid=ImgRaw&r=0',
-            'https://tse3.mm.bing.net/th/id/OIP.YneqOETf3OgP2JvXMvMiUgHaE7?cb=iwc1&rs=1&pid=ImgDetMain',
-            'https://tse1.mm.bing.net/th/id/OIP.tMojzaC8DyhyGBXP-xDu8AHaJw?cb=iwc1&w=600&h=790&rs=1&pid=ImgDetMain',
-            'https://tse3.mm.bing.net/th/id/OIP.sqPButrSPwz7DJ6unr_wQAHaE7?cb=iwc1&rs=1&pid=ImgDetMain',
-            'https://th.bing.com/th/id/R.af0c811cf2ae38e67a46ec1463278498?rik=eLnW%2biaWENr%2bYA&riu=http%3a%2f%2fwww.tresorsdumonde.fr%2fwp-content%2fuploads%2f2015%2f04%2f42.jpg&ehk=6aoFbrn9NwWhgmTyZ9qXqsqaxqME3%2fl%2b4hq2afIxuqY%3d&risl=&pid=ImgRaw&r=0',
-            'https://tse1.mm.bing.net/th/id/OIP.2w61wfHufLFW53zu2-D1jQHaEK?cb=iwc1&rs=1&pid=ImgDetMain',
-            'https://tse1.mm.bing.net/th/id/OIP.SpTB_SqHmDQ4Zt-1smnk_gHaE7?cb=iwc1&rs=1&pid=ImgDetMain'
-        ]
+            'https://th.bing.com/th/id/R.9d06a8e732ab805b85473b2ff13525ed?rik=bgjsgCZLrQDgcw&riu=http%3a%2f%2fprescriptor.info%2fimages%2f1731.jpg&ehk=uQSIIufIPWyPnAg5%2bc%2fWZTW%2bC1mr4LIRRp8GRcAuwbA%3d&risl=&pid=ImgRaw&r=0'
+        ],
+
     };
 
-    document.querySelectorAll('.image-gallery').forEach(gallery => {
-        const galleryName = gallery.dataset.gallery;
-        const images = attractions[galleryName];
-        const img = gallery.querySelector('img');
-        const dotsContainer = gallery.parentElement.querySelector('.dots-container');
-        let currentIndex = 0;
-        const maxVisibleDots = 5;
+    // Initialize galleries if they exist
+    const galleries = document.querySelectorAll('.image-gallery');
+    if (galleries.length > 0) {
+        console.log('Initializing', galleries.length, 'image galleries');
 
-        function createDots() {
-            dotsContainer.innerHTML = '';
-            const totalImages = images.length;
-            const startDot = Math.max(0, Math.min(currentIndex - 2, totalImages - maxVisibleDots));
-            const endDot = Math.min(startDot + maxVisibleDots, totalImages);
+        galleries.forEach(gallery => {
+            const galleryName = gallery.dataset.gallery;
+            const images = attractions[galleryName];
 
-            // Add sliding animation class
-            dotsContainer.classList.add('sliding');
-
-            // Remove animation class after transition
-            setTimeout(() => {
-                dotsContainer.classList.remove('sliding');
-            }, 300);
-
-            for (let i = startDot; i < endDot; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'w-2 h-2 rounded-full bg-white transition-all duration-300';
-                dot.style.opacity = i === currentIndex ? '1' : '0.5';
-                dot.style.cursor = 'pointer';
-                dot.addEventListener('click', () => updateImage(i));
-                dotsContainer.appendChild(dot);
+            if (!images) {
+                console.warn('No images found for gallery:', galleryName);
+                return;
             }
-        }
 
-        function updateImage(newIndex) {
-            currentIndex = newIndex;
-            img.src = images[currentIndex];
-            createDots(); // Recreate dots to show the correct range
-        }
+            const img = gallery.querySelector('img');
+            const dotsContainer = gallery.parentElement.querySelector('.dots-container');
+            let currentIndex = 0;
+            const maxVisibleDots = 5;
 
-        // Initial dots creation
-        createDots();
+            function createDots() {
+                dotsContainer.innerHTML = '';
+                const totalImages = images.length;
+                const startDot = Math.max(0, Math.min(currentIndex - 2, totalImages - maxVisibleDots));
+                const endDot = Math.min(startDot + maxVisibleDots, totalImages);
 
-        gallery.querySelector('.nav-arrow.prev').addEventListener('click', (e) => {
-            e.preventDefault();
-            const newIndex = (currentIndex - 1 + images.length) % images.length;
-            updateImage(newIndex);
+                // Add sliding animation class
+                dotsContainer.classList.add('sliding');
+
+                // Remove animation class after transition
+                setTimeout(() => {
+                    dotsContainer.classList.remove('sliding');
+                }, 300);
+
+                for (let i = startDot; i < endDot; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'w-2 h-2 rounded-full bg-white transition-all duration-300';
+                    dot.style.opacity = i === currentIndex ? '1' : '0.5';
+                    dot.style.cursor = 'pointer';
+                    dot.addEventListener('click', () => updateImage(i));
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            function updateImage(newIndex) {
+                currentIndex = newIndex;
+                img.src = images[currentIndex];
+                createDots(); // Recreate dots to show the correct range
+            }
+
+            // Initial dots creation
+            createDots();
+
+            const prevBtn = gallery.querySelector('.nav-arrow.prev');
+            const nextBtn = gallery.querySelector('.nav-arrow.next');
+
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newIndex = (currentIndex - 1 + images.length) % images.length;
+                    updateImage(newIndex);
+                });
+
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const newIndex = (currentIndex + 1) % images.length;
+                    updateImage(newIndex);
+                });
+            } else {
+                console.warn('Navigation buttons not found for gallery:', galleryName);
+            }
         });
-
-        gallery.querySelector('.nav-arrow.next').addEventListener('click', (e) => {
-            e.preventDefault();
-            const newIndex = (currentIndex + 1) % images.length;
-            updateImage(newIndex);
-        });
-    });
+    }
 }); 

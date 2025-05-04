@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamanrasset - Algeria</title>
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+
+        .city-name {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #1a365d, #2c5282);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.05em;
+            text-align: center;
+            margin: 1rem auto;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2c5282;
+            width: fit-content;
+        }
+
+        .image-gallery {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-gallery img {
+            transition: opacity 0.3s ease;
+        }
+
+        .sliding {
+            transition: transform 0.3s ease;
+        }
+    </style>
+    <script>
+        // Image gallery functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const attractions = {
+                'assekrem': [
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                ],
+                'tassili': [
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                ],
+                'hoggar': [
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                ],
+                'museum': [
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                ]
+            };
+
+            // Initialize galleries if they exist
+            const galleries = document.querySelectorAll('.image-gallery');
+            if (galleries.length > 0) {
+                console.log('Initializing', galleries.length, 'image galleries');
+
+                galleries.forEach(gallery => {
+                    const galleryName = gallery.dataset.gallery;
+                    const images = attractions[galleryName];
+
+                    if (!images) {
+                        console.warn('No images found for gallery:', galleryName);
+                        return;
+                    }
+
+                    const img = gallery.querySelector('img');
+                    const dotsContainer = gallery.parentElement.querySelector('.dots-container');
+                    let currentIndex = 0;
+                    const maxVisibleDots = 5;
+
+                    function createDots() {
+                        dotsContainer.innerHTML = '';
+                        const totalImages = images.length;
+                        const startDot = Math.max(0, Math.min(currentIndex - 2, totalImages - maxVisibleDots));
+                        const endDot = Math.min(startDot + maxVisibleDots, totalImages);
+
+                        // Add sliding animation class
+                        dotsContainer.classList.add('sliding');
+
+                        // Remove animation class after transition
+                        setTimeout(() => {
+                            dotsContainer.classList.remove('sliding');
+                        }, 300);
+
+                        for (let i = startDot; i < endDot; i++) {
+                            const dot = document.createElement('div');
+                            dot.className = 'w-2 h-2 rounded-full bg-white transition-all duration-300';
+                            dot.style.opacity = i === currentIndex ? '1' : '0.5';
+                            dot.style.cursor = 'pointer';
+                            dot.addEventListener('click', () => updateImage(i));
+                            dotsContainer.appendChild(dot);
+                        }
+                    }
+
+                    function updateImage(newIndex) {
+                        currentIndex = newIndex;
+                        img.src = images[currentIndex];
+                        createDots(); // Recreate dots to show the correct range
+                    }
+
+                    // Initial dots creation
+                    createDots();
+
+                    const prevBtn = gallery.querySelector('.nav-arrow.prev');
+                    const nextBtn = gallery.querySelector('.nav-arrow.next');
+
+                    if (prevBtn && nextBtn) {
+                        prevBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const newIndex = (currentIndex - 1 + images.length) % images.length;
+                            updateImage(newIndex);
+                        });
+
+                        nextBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const newIndex = (currentIndex + 1) % images.length;
+                            updateImage(newIndex);
+                        });
+                    } else {
+                        console.warn('Navigation buttons not found for gallery:', galleryName);
+                    }
+                });
+            }
+        });
+
+        // Login modal functions
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function (event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                hideLoginModal();
+            }
+        });
+    </script>
+</head>
+
+<body class="open-sans" style="font-family: 'Open Sans', sans-serif;">
+    <div class="pt-24">
+        <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow-md z-50">
+            <a href="../index.html">
+                <img src="../images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
+            </a>
+            <div class="relative w-1/2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="search" placeholder="Search in Tamanrasset"
+                        class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
+                    <button type="submit"
+                        class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="showLoginModal()"
+                class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap cursor-pointer">
+                Se Connecter
+            </button>
+        </div>
+    </div>
+
+    <div class="p-0">
+        <h1 class="city-name">TAMANRASSET</h1>
+    </div>
+
+    <!-- Tourist Attractions Section -->
+    <div class="container mx-auto px-4 py-16 max-w-[1152px]">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Assekrem Card -->
+            <a href="/assekrem" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="assekrem">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Assekrem-Tamanrasset.jpg"
+                                alt="Assekrem"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Assekrem</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,7</span>
+                            <span class="ml-2 text-gray-400">(523)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Point de vue</p>
+                        <div class="flex items-center mb-4 bg-[#FFF1F0] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-sun text-[#FF4D4F]"></i>
+                            </div>
+                            <span class="text-gray-600">Desert</span>
+                        </div>
+                        <p class="text-gray-700">Un point de vue spectaculaire sur le désert du Sahara, offrant des
+                            couchers de soleil inoubliables.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Hoggar Mountains Card -->
+            <a href="/hoggar" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="hoggar">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Hoggar-Mountains-Tamanrasset.jpg"
+                                alt="Hoggar Mountains"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Hoggar Mountains</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,5</span>
+                            <span class="ml-2 text-gray-400">(387)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Montagnes</p>
+                        <div class="flex items-center mb-4 bg-[#FFF1F0] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-sun text-[#FF4D4F]"></i>
+                            </div>
+                            <span class="text-gray-600">Desert</span>
+                        </div>
+                        <p class="text-gray-700">Un massif montagneux impressionnant au cœur du Sahara, parfait pour la
+                            randonnée et l'escalade.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Tamanrasset Museum Card -->
+            <a href="/tamanrasset-museum" class="block cursor-pointer group">
+                <div
+                    class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <div class="relative">
+                        <div class="relative h-72 image-gallery" data-gallery="museum">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Tamanrasset-Museum.jpg"
+                                alt="Tamanrasset Museum"
+                                class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                            <!-- Navigation Arrows -->
+                            <button
+                                class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                            </button>
+                            <button
+                                class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                <i class="fa-regular fa-bookmark text-gray-600"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Tamanrasset Museum</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star text-green-500"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4,8</span>
+                            <span class="ml-2 text-gray-400">(612)</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Musée</p>
+                        <div class="flex items-center mb-4 bg-[#F0F5FF] p-2 rounded-lg">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-museum text-[#2F54EB]"></i>
+                            </div>
+                            <span class="text-gray-600">Museums</span>
+                        </div>
+                        <p class="text-gray-700">Un musée fascinant présentant l'histoire et la culture de la région du
+                            Hoggar.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Connexion</h2>
+                <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Se Connecter
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
