@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demandes d'ajout de lieux</title>
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+
+<body class="open-sans" style="font-family: 'Open Sans', sans-serif;">
+    <div class="pt-24">
+        <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow-md z-50">
+            <a href="index.html">
+                <img src="images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
+            </a>
+            <h1 class="text-2xl font-bold text-gray-800">Demandes d'ajout de lieux</h1>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="font-semibold text-gray-800">Admin User</p>
+                    <p class="text-sm text-gray-600">Administrateur</p>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=60"
+                        alt="Profile Picture" class="w-12 h-12 rounded-full object-cover border-2 border-gray-200">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16 max-w-[1152px]">
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Sample Request Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Nouveau Parc d'Attractions</h3>
+                        <p class="text-gray-600 mb-2">Soumis par: John Doe</p>
+                        <p class="text-gray-600 mb-4">Date: 15 Mars 2024</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                            <i class="fas fa-check mr-2"></i>Approuver
+                        </button>
+                        <button
+                            class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors cursor-pointer">
+                            <i class="fas fa-times mr-2"></i>Refuser
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Description:</h4>
+                    <p class="text-gray-700">Un nouveau parc d'attractions moderne avec des manèges à la pointe de la
+                        technologie et des attractions pour toute la famille.</p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Catégorie:</h4>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Amusement</span>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Images:</h4>
+                    <div class="grid grid-cols-4 gap-4">
+                        <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=60"
+                            alt="Parc d'attractions" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=60"
+                            alt="Parc d'attractions" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=60"
+                            alt="Parc d'attractions" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=60"
+                            alt="Parc d'attractions" class="w-full h-32 object-cover rounded-lg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Another Sample Request Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Cinéma IMAX</h3>
+                        <p class="text-gray-600 mb-2">Soumis par: Jane Smith</p>
+                        <p class="text-gray-600 mb-4">Date: 14 Mars 2024</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                            <i class="fas fa-check mr-2"></i>Approuver
+                        </button>
+                        <button
+                            class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors cursor-pointer">
+                            <i class="fas fa-times mr-2"></i>Refuser
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Description:</h4>
+                    <p class="text-gray-700">Un nouveau cinéma IMAX avec la dernière technologie de projection et un son
+                        surround immersif.</p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Catégorie:</h4>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Divertissement</span>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">Images:</h4>
+                    <div class="grid grid-cols-4 gap-4">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60"
+                            alt="Cinéma IMAX" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://th.bing.com/th/id/R.431c8287a6f352f0663e8aa310fa77ae?rik=rW7LtnyZXjwUiQ&pid=ImgRaw&r=0"
+                            alt="Cinéma IMAX" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60"
+                            alt="Cinéma IMAX" class="w-full h-32 object-cover rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60"
+                            alt="Cinéma IMAX" class="w-full h-32 object-cover rounded-lg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Water Park Request Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="relative h-96 px-6 pt-6">
+                    <img src="https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=800&auto=format&fit=crop&q=60"
+                        alt="Aqua Paradise" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Aqua Paradise</h3>
+                            <p class="text-gray-600 mb-2">Soumis par: Sarah Johnson</p>
+                            <p class="text-gray-600 mb-4">Date: 16 Mars 2024</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                                <i class="fas fa-check mr-2"></i>Approuver
+                            </button>
+                            <button
+                                class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors cursor-pointer">
+                                <i class="fas fa-times mr-2"></i>Refuser
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="font-semibold mb-2">Description:</h4>
+                        <p class="text-gray-700">Un parc aquatique moderne avec des toboggans géants, des piscines à
+                            vagues, et des zones dédiées aux enfants. Le complexe comprend également des restaurants et
+                            des espaces de détente.</p>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="font-semibold mb-2">Catégorie:</h4>
+                        <span class="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full">Parc Aquatique</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

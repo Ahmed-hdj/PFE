@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Details - Algeria Tourism</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <div class="pt-24">
+        <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow-md z-50">
+            <a href="/">
+                <img src="images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
+            </a>
+            <button onclick="showAddPlaceModal()"
+                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer">
+                Ajouter un lieu
+            </button>
+            <div class="relative w-1/2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="search" placeholder="Search in Alger"
+                        class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
+                    <button type="submit"
+                        class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="showLoginModal()"
+                class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap cursor-pointer">
+                Se Connecter
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Side - Comments -->
+            <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col h-[800px]">
+                <h2 class="text-2xl font-bold mb-6">Comments</h2>
+                <div class="space-y-6 flex-grow overflow-y-auto" id="commentsContainer">
+                    <!-- Sample Comments for Card 1 -->
+                    <div class="comment bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://i.pravatar.cc/150?img=1" alt="User Avatar" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-gray-800">Sarah Martin</h4>
+                                    <span class="text-sm text-gray-500">2 hours ago</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">J'ai visité cet endroit l'année dernière et c'était
+                                    vraiment magnifique ! L'architecture est impressionnante et l'ambiance est unique.
+                                    Je recommande vivement cette visite.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comment bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://i.pravatar.cc/150?img=2" alt="User Avatar" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-gray-800">Mohammed Ali</h4>
+                                    <span class="text-sm text-gray-500">5 hours ago</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">Un lieu historique fascinant ! Les guides sont très
+                                    compétents et les explications sont détaillées. N'oubliez pas de prendre des photos,
+                                    c'est vraiment photogénique.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comment bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-start space-x-4">
+                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-gray-800">Emma Dubois</h4>
+                                    <span class="text-sm text-gray-500">1 day ago</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">L'expérience était incroyable ! Je suggère de venir tôt le
+                                    matin pour éviter la foule. Les détails architecturaux sont à couper le souffle.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add Comment Form -->
+                <div class="mt-auto pt-6 border-t">
+                    <h3 class="text-lg font-semibold mb-4">Add a Comment</h3>
+                    <form id="commentForm" class="space-y-4">
+                        <textarea
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            rows="4" placeholder="Write your comment..."></textarea>
+                        <button type="submit"
+                            class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">Post
+                            Comment</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side - Images -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="relative">
+                    <div class="relative h-[600px] image-gallery" id="mainImageGallery">
+                        <img src="" alt="" class="w-full h-full object-cover rounded-lg" id="mainImage">
+                        <!-- Navigation Arrows -->
+                        <button
+                            class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                            <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                        </button>
+                        <button
+                            class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                            <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                        </button>
+                    </div>
+                    <!-- Dots Container -->
+                    <div
+                        class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Place Modal -->
+    <div id="addPlaceModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addPlaceForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Location</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 mb-2">Catégorie</label>
+                    <select class="w-full px-3 py-2 border rounded-full">
+                        <option value="">Sélectionnez une catégorie</option>
+                        <option value="religious">Religieux</option>
+                        <option value="cultural">Culturel</option>
+                        <option value="nature">Nature</option>
+                        <option value="historical">Historique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Images</label>
+                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Ajouter le lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Connexion</h2>
+                <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Se Connecter
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showSignupForm()"
+                        class="text-blue-500 hover:text-blue-700 underline">S'inscrire</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signupModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Inscription</h2>
+                <button onclick="hideSignupModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre nom complet">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Créez votre mot de passe">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Confirmer le mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Confirmez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    S'inscrire
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showLoginForm()" class="text-blue-500 hover:text-blue-700 underline">Se
+                        connecter</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Get card details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const cardId = urlParams.get('id');
+        const cardTitle = urlParams.get('title');
+        const cardImages = JSON.parse(decodeURIComponent(urlParams.get('images') || '[]'));
+        const cardComments = JSON.parse(decodeURIComponent(urlParams.get('comments') || '[]'));
+
+        // Update page title
+        document.title = `${cardTitle} - Algeria Tourism`;
+
+        // Function to display comments
+        function displayComments() {
+            const commentsContainer = document.getElementById('commentsContainer');
+            commentsContainer.innerHTML = ''; // Clear existing comments
+
+            cardComments.forEach(comment => {
+                const commentHTML = `
+                    <div class="comment bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-start space-x-4">
+                            <img src="${comment.avatar}" alt="User Avatar" class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-semibold text-gray-800">${comment.name}</h4>
+                                    <span class="text-sm text-gray-500">${comment.time}</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">${comment.text}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                commentsContainer.innerHTML += commentHTML;
+            });
+        }
+
+        // Display comments when the page loads
+        displayComments();
+
+        // Load images
+        const mainImage = document.getElementById('mainImage');
+        const dotsContainer = document.querySelector('.dots-container');
+        let currentIndex = 0;
+        const maxVisibleDots = 5;
+
+        function createDots() {
+            dotsContainer.innerHTML = '';
+            const totalImages = cardImages.length;
+            const startDot = Math.max(0, Math.min(currentIndex - 2, totalImages - maxVisibleDots));
+            const endDot = Math.min(startDot + maxVisibleDots, totalImages);
+
+            // Add sliding animation class
+            dotsContainer.classList.add('sliding');
+
+            // Remove animation class after transition
+            setTimeout(() => {
+                dotsContainer.classList.remove('sliding');
+            }, 300);
+
+            for (let i = startDot; i < endDot; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'w-2 h-2 rounded-full bg-white transition-all duration-300';
+                dot.style.opacity = i === currentIndex ? '1' : '0.5';
+                dot.style.cursor = 'pointer';
+                dot.addEventListener('click', () => updateImage(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateImage(newIndex) {
+            currentIndex = newIndex;
+            mainImage.src = cardImages[currentIndex];
+            createDots(); // Recreate dots to show the correct range
+        }
+
+        if (cardImages.length > 0) {
+            mainImage.src = cardImages[0];
+            mainImage.alt = cardTitle;
+
+            // Initial dots creation
+            createDots();
+
+            // Handle image navigation
+            const prevButton = document.querySelector('.nav-arrow.prev');
+            const nextButton = document.querySelector('.nav-arrow.next');
+
+            prevButton.addEventListener('click', () => {
+                const newIndex = (currentIndex - 1 + cardImages.length) % cardImages.length;
+                updateImage(newIndex);
+            });
+
+            nextButton.addEventListener('click', () => {
+                const newIndex = (currentIndex + 1) % cardImages.length;
+                updateImage(newIndex);
+            });
+        }
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.getElementById(modalId).classList.add('flex');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('fixed')) {
+                e.target.classList.add('hidden');
+                e.target.classList.remove('flex');
+            }
+        });
+
+        // Handle form submissions
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add login logic here
+            closeModal('loginModal');
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add signup logic here
+            closeModal('signupModal');
+        });
+
+        // Handle comment submission
+        document.getElementById('commentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const commentText = e.target.querySelector('textarea').value;
+            if (commentText.trim()) {
+                // Add comment logic here
+                e.target.querySelector('textarea').value = '';
+            }
+        });
+
+        // Add Place modal functions
+        function showAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            const addPlaceModal = document.getElementById('addPlaceModal');
+
+            if (event.target === loginModal) {
+                hideLoginModal();
+            }
+            if (event.target === signupModal) {
+                hideSignupModal();
+            }
+            if (event.target === addPlaceModal) {
+                hideAddPlaceModal();
+            }
+        });
+
+        // Handle Add Place form submission
+        document.getElementById('addPlaceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            hideAddPlaceModal();
+        });
+    </script>
+</body>
+
+</html>

@@ -68,6 +68,20 @@
                 ]
             };
 
+            // Function to update card links with current images
+            function updateCardLinks() {
+                const cards = document.querySelectorAll('a[href*="card-details.html"]');
+                cards.forEach(card => {
+                    const id = card.getAttribute('href').split('id=')[1].split('&')[0];
+                    const title = card.getAttribute('href').split('title=')[1].split('&')[0];
+                    const images = attractions[id];
+                    if (images) {
+                        const encodedImages = encodeURIComponent(JSON.stringify(images));
+                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}`;
+                    }
+                });
+            }
+
             // Initialize galleries if they exist
             const galleries = document.querySelectorAll('.image-gallery');
             if (galleries.length > 0) {
@@ -115,6 +129,8 @@
                         currentIndex = newIndex;
                         img.src = images[currentIndex];
                         createDots(); // Recreate dots to show the correct range
+                        // Update the card link when image changes
+                        updateCardLinks();
                     }
 
                     // Initial dots creation
@@ -140,6 +156,9 @@
                     }
                 });
             }
+
+            // Initial update of card links
+            updateCardLinks();
         });
 
         // Login modal functions
@@ -155,12 +174,65 @@
             modal.classList.add('hidden');
         }
 
-        // Close modal when clicking outside
+        function showSignupForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            loginModal.classList.remove('flex');
+            loginModal.classList.add('hidden');
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        }
+
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('flex');
+        }
+
+        // Add Place modal functions
+        function showAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Close modals when clicking outside
         document.addEventListener('click', function (event) {
-            const modal = document.getElementById('loginModal');
-            if (event.target === modal) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            const addPlaceModal = document.getElementById('addPlaceModal');
+
+            if (event.target === loginModal) {
                 hideLoginModal();
             }
+            if (event.target === signupModal) {
+                hideSignupModal();
+            }
+            if (event.target === addPlaceModal) {
+                hideAddPlaceModal();
+            }
+        });
+
+        // Handle Add Place form submission
+        document.getElementById('addPlaceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            hideAddPlaceModal();
         });
     </script>
 </head>
@@ -171,6 +243,10 @@
             <a href="../index.html">
                 <img src="../images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
             </a>
+            <button onclick="showAddPlaceModal()"
+                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer">
+                Ajouter un lieu
+            </button>
             <div class="relative w-1/2">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -197,7 +273,8 @@
     <div class="container mx-auto px-4 py-16 max-w-[1152px]">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Great Mosque of Tlemcen Card -->
-            <a href="/great-mosque" class="block cursor-pointer group">
+            <a href="../card-details.html?id=mosque&title=Great%20Mosque%20of%20Tlemcen&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -250,7 +327,8 @@
             </a>
 
             <!-- Mechouar Palace Card -->
-            <a href="/mechouar-palace" class="block cursor-pointer group">
+            <a href="../card-details.html?id=mechouar&title=Mechouar%20Palace&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -303,7 +381,8 @@
             </a>
 
             <!-- El-Ourit Waterfall Card -->
-            <a href="/el-ourit" class="block cursor-pointer group">
+            <a href="../card-details.html?id=ourit&title=El%20Ourit%20Waterfall&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -357,8 +436,57 @@
         </div>
     </div>
 
+    <!-- Add Place Modal -->
+    <div id="addPlaceModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addPlaceForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Location</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 mb-2">Catégorie</label>
+                    <select class="w-full px-3 py-2 border rounded-full">
+                        <option value="">Sélectionnez une catégorie</option>
+                        <option value="religious">Religieux</option>
+                        <option value="cultural">Culturel</option>
+                        <option value="nature">Nature</option>
+                        <option value="historical">Historique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Images</label>
+                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Ajouter le lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50">
+    <div id="loginModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
         <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold">Connexion</h2>
@@ -380,6 +508,52 @@
                     class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
                     Se Connecter
                 </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showSignupForm()"
+                        class="text-blue-500 hover:text-blue-700 underline">S'inscrire</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Inscription</h2>
+                <button onclick="hideSignupModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre nom complet">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Créez votre mot de passe">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Confirmer le mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Confirmez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    S'inscrire
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showLoginForm()" class="text-blue-500 hover:text-blue-700 underline">Déjà un
+                        compte ? Se connecter</a>
+                </div>
             </form>
         </div>
     </div>

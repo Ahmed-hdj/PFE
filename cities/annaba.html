@@ -45,14 +45,119 @@
         }
     </style>
     <script>
+        // Add Place functionality
+        function checkAuthAndShowAddPlaceForm() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                showAddPlaceModal();
+            } else {
+                showAuthWarningModal();
+            }
+        }
+
+        function showAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Trigger reflow
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function showAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Trigger reflow
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAuthWarningLogin() {
+            hideAuthWarningModal();
+            setTimeout(() => {
+                showLoginModal();
+            }, 200);
+        }
+
+        // Login modal functions
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Signup modal functions
+        function showSignupForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            loginModal.classList.remove('flex');
+            loginModal.classList.add('hidden');
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        }
+
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('flex');
+        }
+
+        // Handle add place form submission
+        document.addEventListener('DOMContentLoaded', function () {
+            const addPlaceForm = document.querySelector('#addPlaceForm');
+            if (addPlaceForm) {
+                addPlaceForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    console.log('Form submitted:', Object.fromEntries(formData));
+                    hideAddPlaceModal();
+                });
+            }
+        });
+
         // Image gallery functionality
         document.addEventListener('DOMContentLoaded', function () {
             const attractions = {
                 'basilique': [
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                    'https://tse1.mm.bing.net/th/id/OIP.C2dYgf0zNB2GfgzH3PIF5AHaEu?cb=iwc1&rs=1&pid=ImgDetMain',
+                    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/70/54/dd/basilique-notre-dame-d.jpg?w=1200&h=-1&s=1',
+                    'https://upload.wikimedia.org/wikipedia/commons/c/c6/Basilique_Notre_Dame_d%27Afrique_Alger.JPG'
                 ],
                 'seraidi': [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
@@ -62,9 +167,9 @@
                 ],
                 'hippone': [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                    'data:image/jpeg;base64,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',
+                    'https://th.bing.com/th/id/OSK.HEROPisc8SuBw_v1LXinYaMvNCuwjWU2SQxq8NQmEU7gDb4?w=472&h=280&c=13&rs=2&o=6&pid=SANGAM',
+                    'https://th.bing.com/th/id/OIP.DlNsAfgQG82jLywAj1WUJQHaGL?w=217&h=181&c=7&r=0&o=5&cb=iwc1&pid=1.7'
                 ],
                 'corniche': [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
@@ -85,6 +190,20 @@
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
                 ]
             };
+
+            // Function to update card links with current images
+            function updateCardLinks() {
+                const cards = document.querySelectorAll('a[href*="card-details.html"]');
+                cards.forEach(card => {
+                    const id = card.getAttribute('href').split('id=')[1].split('&')[0];
+                    const title = card.getAttribute('href').split('title=')[1].split('&')[0];
+                    const images = attractions[id];
+                    if (images) {
+                        const encodedImages = encodeURIComponent(JSON.stringify(images));
+                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}`;
+                    }
+                });
+            }
 
             // Initialize galleries if they exist
             const galleries = document.querySelectorAll('.image-gallery');
@@ -133,6 +252,8 @@
                         currentIndex = newIndex;
                         img.src = images[currentIndex];
                         createDots(); // Recreate dots to show the correct range
+                        // Update the card link when image changes
+                        updateCardLinks();
                     }
 
                     // Initial dots creation
@@ -158,27 +279,9 @@
                     }
                 });
             }
-        });
 
-        // Login modal functions
-        function showLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function hideLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function (event) {
-            const modal = document.getElementById('loginModal');
-            if (event.target === modal) {
-                hideLoginModal();
-            }
+            // Initial update of card links
+            updateCardLinks();
         });
     </script>
 </head>
@@ -189,6 +292,11 @@
             <a href="../index.html">
                 <img src="../images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
             </a>
+            <button onclick="checkAuthAndShowAddPlaceForm()"
+                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                Add Place
+            </button>
             <div class="relative w-1/2">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -215,7 +323,8 @@
     <div class="container mx-auto px-4 py-16 max-w-[1152px]">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Basilique Saint-Augustin Card -->
-            <a href="/basilique-saint-augustin" class="block cursor-pointer group">
+            <a href="../card-details.html?id=basilique&title=Basilique%20Saint-Augustin&images=%5B%22https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.C2dYgf0zNB2GfgzH3PIF5AHaEu%3Fcb%3Diwc1%26rs%3D1%26pid%3DImgDetMain%22%2C%22https%3A%2F%2Fdynamic-media-cdn.tripadvisor.com%2Fmedia%2Fphoto-o%2F0c%2F70%2F54%2Fdd%2Fbasilique-notre-dame-d.jpg%3Fw%3D1200%26h%3D-1%26s%3D1%22%2C%22https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fc%2Fc6%2FBasilique_Notre_Dame_d%2527Afrique_Alger.JPG%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -268,7 +377,8 @@
             </a>
 
             <!-- Seraidi Beach Card -->
-            <a href="/seraidi-beach" class="block cursor-pointer group">
+            <a href="../card-details.html?id=seraidi&title=Seraidi%20Beach&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -321,7 +431,8 @@
             </a>
 
             <!-- Hippone Museum Card -->
-            <a href="/hippone-museum" class="block cursor-pointer group">
+            <a href="../card-details.html?id=hippone&title=Hippone%20Museum&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FOSK.HEROPisc8SuBw_v1LXinYaMvNCuwjWU2SQxq8NQmEU7gDb4%3Fw%3D472%26h%3D280%26c%3D13%26rs%3D2%26o%3D6%26pid%3DSANGAM%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -374,7 +485,8 @@
             </a>
 
             <!-- Hippo Regius Card -->
-            <a href="/hippo-regius" class="block cursor-pointer group">
+            <a href="../card-details.html?id=hippo&title=Hippo%20Regius&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -427,7 +539,8 @@
             </a>
 
             <!-- Sidi Brahim Mosque Card -->
-            <a href="/sidi-brahim-mosque" class="block cursor-pointer group">
+            <a href="../card-details.html?id=sidi-brahim&title=Sidi%20Brahim%20Mosque&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -479,7 +592,8 @@
             </a>
 
             <!-- Corniche Card -->
-            <a href="/corniche" class="block cursor-pointer group">
+            <a href="../card-details.html?id=corniche&title=Corniche&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+                class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
@@ -532,8 +646,81 @@
         </div>
     </div>
 
+    <!-- Add Place Modal -->
+    <div id="addPlaceModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addPlaceForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Location</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 mb-2">Catégorie</label>
+                    <select class="w-full px-3 py-2 border rounded-full">
+                        <option value="">Sélectionnez une catégorie</option>
+                        <option value="religious">Religieux</option>
+                        <option value="cultural">Culturel</option>
+                        <option value="nature">Nature</option>
+                        <option value="historical">Historique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Images</label>
+                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Ajouter le lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Warning Modal -->
+    <div id="authWarningModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Authentication Required</h2>
+                <button onclick="hideAuthWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Please log in to add a new place.</p>
+            <div class="flex gap-4">
+                <button onclick="hideAuthWarningModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="handleAuthWarningLogin()"
+                    class="flex-1 bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50">
+    <div id="loginModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
         <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold">Connexion</h2>
@@ -541,7 +728,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form class="space-y-4">
+            <form id="loginForm" class="space-y-4">
                 <div>
                     <label class="block text-gray-700 mb-2">Email</label>
                     <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
@@ -555,6 +742,52 @@
                     class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
                     Se Connecter
                 </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showSignupForm()"
+                        class="text-blue-500 hover:text-blue-700 underline">S'inscrire</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Inscription</h2>
+                <button onclick="hideSignupModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre nom complet">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Créez votre mot de passe">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Confirmer le mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Confirmez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    S'inscrire
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showLoginForm()" class="text-blue-500 hover:text-blue-700 underline">Déjà un
+                        compte ? Se connecter</a>
+                </div>
             </form>
         </div>
     </div>

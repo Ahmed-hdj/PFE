@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bejaia - Algeria</title>
+    <title>Religious Sites - Algeria</title>
     <style>
         body {
             background-color: #f3f4f6;
@@ -45,6 +45,16 @@
         }
     </style>
     <script>
+        // Check if user is admin and show/hide admin button
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const userRole = localStorage.getItem('userRole');
+        const adminDemandesButton = document.getElementById('adminDemandesButton');
+        if (isAdmin && userRole === 'admin') {
+            adminDemandesButton.classList.remove('hidden');
+        } else {
+            adminDemandesButton.classList.add('hidden');
+        }
+
         // Add Place functionality
         function checkAuthAndShowAddPlaceForm() {
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -154,36 +164,84 @@
         // Image gallery functionality
         document.addEventListener('DOMContentLoaded', function () {
             const attractions = {
-                'cap-carbon': [
+                ketchaoua: [
+                    'https://www.algeria.com/wp-content/uploads/2018/12/Ketchaoua-Mosque.jpg',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://th.bing.com/th/id/OIP.E-tYUw7PjlKBLXRbcaL_bAHaFi?w=269&h=200&c=7&r=0&o=5&cb=iwc1&pid=1.7',
+                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                ],
+                church: [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
                 ],
-                'gouraya': [
+                synagogue: [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
-                ],
-                'yemma-gouraya': [
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://th.bing.com/th/id/R.431c8287a6f352f0663e8aa310fa77ae?rik=rW7LtnyZXjwUiQ&pid=ImgRaw&r=0',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
                 ]
             };
 
-            // Function to update card links with current images
+            // Sample comments for each attraction
+            const attractionComments = {
+                'ketchaoua': [
+                    {
+                        name: 'Ahmed Benali',
+                        avatar: 'https://i.pravatar.cc/150?img=7',
+                        time: '1 hour ago',
+                        text: 'Une mosquée magnifique avec une architecture exceptionnelle. L\'ambiance spirituelle est très apaisante.'
+                    },
+                    {
+                        name: 'Marie Dubois',
+                        avatar: 'https://i.pravatar.cc/150?img=8',
+                        time: '3 hours ago',
+                        text: 'Un lieu de culte impressionnant. Les détails architecturaux sont à couper le souffle. Je recommande la visite guidée.'
+                    }
+                ],
+                'notre-dame': [
+                    {
+                        name: 'Pierre Martin',
+                        avatar: 'https://i.pravatar.cc/150?img=9',
+                        time: '2 days ago',
+                        text: 'Une cathédrale historique avec une belle architecture. Les vitraux sont magnifiques.'
+                    },
+                    {
+                        name: 'Fatima Zahra',
+                        avatar: 'https://i.pravatar.cc/150?img=10',
+                        time: '1 week ago',
+                        text: 'Un lieu chargé d\'histoire. Les guides sont très compétents et expliquent bien l\'importance historique du lieu.'
+                    }
+                ],
+                'synagogue': [
+                    {
+                        name: 'David Cohen',
+                        avatar: 'https://i.pravatar.cc/150?img=11',
+                        time: '2 days ago',
+                        text: 'Un lieu de culte historique qui témoigne de la diversité religieuse d\'Alger. L\'architecture est unique.'
+                    },
+                    {
+                        name: 'Sarah Goldstein',
+                        avatar: 'https://i.pravatar.cc/150?img=12',
+                        time: '3 days ago',
+                        text: 'Une synagogue magnifique avec une histoire fascinante. Je recommande vivement la visite.'
+                    }
+                ]
+            };
+
+            // Function to update card links with current images and comments
             function updateCardLinks() {
                 const cards = document.querySelectorAll('a[href*="card-details.html"]');
                 cards.forEach(card => {
                     const id = card.getAttribute('href').split('id=')[1].split('&')[0];
                     const title = card.getAttribute('href').split('title=')[1].split('&')[0];
                     const images = attractions[id];
+                    const comments = attractionComments[id] || [];
                     if (images) {
                         const encodedImages = encodeURIComponent(JSON.stringify(images));
-                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}`;
+                        const encodedComments = encodeURIComponent(JSON.stringify(comments));
+                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}&comments=${encodedComments}`;
                     }
                 });
             }
@@ -266,6 +324,14 @@
             // Initial update of card links
             updateCardLinks();
         });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function (event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                hideLoginModal();
+            }
+        });
     </script>
 </head>
 
@@ -275,15 +341,20 @@
             <a href="../index.html">
                 <img src="../images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
             </a>
-            <button onclick="checkAuthAndShowAddPlaceForm()"
-                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2">
-                <i class="fas fa-plus"></i>
-                Add Place
-            </button>
+            <div class="flex gap-4">
+                <a href="../demandes.html" id="adminDemandesButton"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors whitespace-nowrap cursor-pointer hidden">
+                    Voir les demandes
+                </a>
+                <button onclick="checkAuthAndShowAddPlaceForm()"
+                    class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer">
+                    Ajouter un lieu
+                </button>
+            </div>
             <div class="relative w-1/2">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="search" placeholder="Search in Bejaia"
+                    <input type="search" placeholder="Search in Alger"
                         class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
                     <button type="submit"
                         class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
@@ -299,21 +370,21 @@
     </div>
 
     <div class="p-0">
-        <h1 class="city-name">BEJAIA</h1>
+        <h1 class="city-name">Religious Sites</h1>
     </div>
 
     <!-- Tourist Attractions Section -->
     <div class="container mx-auto px-4 py-16 max-w-[1152px]">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cap Carbon Card -->
-            <a href="../card-details.html?id=capcarbon&title=Cap%20Carbon&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Ketchaoua Mosque Card -->
+            <a href="../card-details.html?id=ketchaoua&title=Ketchaoua%20Mosque&images=%5B%22https%3A%2F%2Fwww.algeria.com%2Fwp-content%2Fuploads%2F2018%2F12%2FKetchaoua-Mosque.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="cap-carbon">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Cap-Carbon-Bejaia.jpg"
-                                alt="Cap Carbon"
+                        <div class="relative h-72 image-gallery" data-gallery="ketchaoua">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Ketchaoua-Mosque.jpg"
+                                alt="Ketchaoua Mosque"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -334,40 +405,40 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Cap Carbon</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Ketchaoua Mosque</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
-                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
-                            <span class="ml-2 text-gray-600">4,7</span>
-                            <span class="ml-2 text-gray-400">(523)</span>
+                            <span class="ml-2 text-gray-600">4.5</span>
+                            <span class="ml-2 text-gray-400">(328)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Point de vue</p>
-                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Mosques</p>
+                        <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-tree text-[#52C41A]"></i>
+                                <i class="fas fa-mosque text-[#1890FF]"></i>
                             </div>
-                            <span class="text-gray-600">Nature</span>
+                            <span class="text-gray-600">Religious</span>
                         </div>
-                        <p class="text-gray-700">Un magnifique cap offrant une vue panoramique sur la mer Méditerranée
-                            et la ville de Bejaia.</p>
+                        <p class="text-gray-700">A historic mosque in the Casbah of Algiers, known for its unique
+                            architecture and cultural significance.</p>
                     </div>
                 </div>
             </a>
 
-            <!-- Gouraya National Park Card -->
-            <a href="../card-details.html?id=gouraya&title=Gouraya%20National%20Park&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Notre Dame d'Afrique Card -->
+            <a href="../card-details.html?id=notre-dame&title=Notre%20Dame%20d%27Afrique&images=%5B%22https%3A%2F%2Fwww.algeria.com%2Fwp-content%2Fuploads%2F2018%2F12%2FNotre-Dame-dAfrique.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="gouraya">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Gouraya-National-Park-Bejaia.jpg"
-                                alt="Gouraya National Park"
+                        <div class="relative h-72 image-gallery" data-gallery="church">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Notre-Dame-dAfrique.jpg"
+                                alt="Notre Dame d'Afrique"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -388,7 +459,7 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Gouraya National Park</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Notre Dame d'Afrique</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
@@ -398,30 +469,30 @@
                                 <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
                             <span class="ml-2 text-gray-600">4,5</span>
-                            <span class="ml-2 text-gray-400">(387)</span>
+                            <span class="ml-2 text-gray-400">(739)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Parc National</p>
-                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Églises et cathédrales</p>
+                        <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-tree text-[#52C41A]"></i>
+                                <i class="fas fa-church text-[#1890FF]"></i>
                             </div>
-                            <span class="text-gray-600">Nature</span>
+                            <span class="text-gray-600">Religious</span>
                         </div>
-                        <p class="text-gray-700">Un parc national magnifique avec une riche biodiversité et des sentiers
-                            de randonnée spectaculaires.</p>
+                        <p class="text-gray-700">Basilique d'Alger surplombant la baie de la capitale, richement décorée
+                            dans le style hispano-mauresque.</p>
                     </div>
                 </div>
             </a>
 
-            <!-- Yemma Gouraya Card -->
-            <a href="../card-details.html?id=yemma&title=Yemma%20Gouraya&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Great Synagogue Card -->
+            <a href="../card-details.html?id=synagogue&title=Great%20Synagogue&images=%5B%22https%3A%2F%2Fwww.algeria.com%2Fwp-content%2Fuploads%2F2018%2F12%2FGreat-Synagogue.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="yemma-gouraya">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Yemma-Gouraya-Bejaia.jpg"
-                                alt="Yemma Gouraya"
+                        <div class="relative h-72 image-gallery" data-gallery="synagogue">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Great-Synagogue.jpg"
+                                alt="Great Synagogue"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -442,27 +513,27 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Yemma Gouraya</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Great Synagogue</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
-                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
-                            <span class="ml-2 text-gray-600">4,8</span>
-                            <span class="ml-2 text-gray-400">(612)</span>
+                            <span class="ml-2 text-gray-600">4,4</span>
+                            <span class="ml-2 text-gray-400">(256)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Site historique</p>
-                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Synagogues</p>
+                        <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                                <i class="fas fa-synagogue text-[#1890FF]"></i>
                             </div>
-                            <span class="text-gray-600">Cultural and Heritage</span>
+                            <span class="text-gray-600">Religious</span>
                         </div>
-                        <p class="text-gray-700">Un site historique et religieux important avec une vue imprenable sur
-                            la ville et la mer.</p>
+                        <p class="text-gray-700">A historic synagogue in Algiers, showcasing the city's religious
+                            diversity and architectural heritage.</p>
                     </div>
                 </div>
             </a>
@@ -614,6 +685,7 @@
             </form>
         </div>
     </div>
+
 </body>
 
 </html>

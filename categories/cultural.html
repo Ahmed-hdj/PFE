@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bejaia - Algeria</title>
+    <title>Alger - Algeria</title>
     <style>
         body {
             background-color: #f3f4f6;
@@ -45,145 +45,113 @@
         }
     </style>
     <script>
-        // Add Place functionality
-        function checkAuthAndShowAddPlaceForm() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            if (isLoggedIn) {
-                showAddPlaceModal();
-            } else {
-                showAuthWarningModal();
-            }
-        }
-
-        function showAddPlaceModal() {
-            const modal = document.getElementById('addPlaceModal');
-            modal.style.opacity = '0';
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            // Trigger reflow
-            modal.offsetHeight;
-            modal.style.opacity = '1';
-        }
-
-        function hideAddPlaceModal() {
-            const modal = document.getElementById('addPlaceModal');
-            modal.style.opacity = '0';
-            setTimeout(() => {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        function showAuthWarningModal() {
-            const modal = document.getElementById('authWarningModal');
-            modal.style.opacity = '0';
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            // Trigger reflow
-            modal.offsetHeight;
-            modal.style.opacity = '1';
-        }
-
-        function hideAuthWarningModal() {
-            const modal = document.getElementById('authWarningModal');
-            modal.style.opacity = '0';
-            setTimeout(() => {
-                modal.classList.remove('flex');
-                modal.classList.add('hidden');
-            }, 200);
-        }
-
-        function handleAuthWarningLogin() {
-            hideAuthWarningModal();
-            setTimeout(() => {
-                showLoginModal();
-            }, 200);
-        }
-
-        // Login modal functions
-        function showLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function hideLoginModal() {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-
-        // Signup modal functions
-        function showSignupForm() {
-            const loginModal = document.getElementById('loginModal');
-            const signupModal = document.getElementById('signupModal');
-            loginModal.classList.remove('flex');
-            loginModal.classList.add('hidden');
-            signupModal.classList.remove('hidden');
-            signupModal.classList.add('flex');
-        }
-
-        function hideSignupModal() {
-            const signupModal = document.getElementById('signupModal');
-            signupModal.classList.remove('flex');
-            signupModal.classList.add('hidden');
-        }
-
-        function showLoginForm() {
-            const loginModal = document.getElementById('loginModal');
-            const signupModal = document.getElementById('signupModal');
-            signupModal.classList.remove('flex');
-            signupModal.classList.add('hidden');
-            loginModal.classList.remove('hidden');
-            loginModal.classList.add('flex');
-        }
-
-        // Handle add place form submission
-        document.addEventListener('DOMContentLoaded', function () {
-            const addPlaceForm = document.querySelector('#addPlaceForm');
-            if (addPlaceForm) {
-                addPlaceForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    console.log('Form submitted:', Object.fromEntries(formData));
-                    hideAddPlaceModal();
-                });
-            }
-        });
-
         // Image gallery functionality
         document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is admin and show/hide admin button
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            const userRole = localStorage.getItem('userRole');
+            const adminDemandesButton = document.getElementById('adminDemandesButton');
+            if (isAdmin && userRole === 'admin') {
+                adminDemandesButton.classList.remove('hidden');
+            } else {
+                adminDemandesButton.classList.add('hidden');
+            }
+
             const attractions = {
-                'cap-carbon': [
+                jardin: [
+                    'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&auto=format&fit=crop&q=60',
+                    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=60'
+                ],
+                dame: [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
                 ],
-                'gouraya': [
+                casbah: [
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
-                ],
-                'yemma-gouraya': [
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
-                    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                    'https://th.bing.com/th/id/R.431c8287a6f352f0663e8aa310fa77ae?rik=rW7LtnyZXjwUiQ&pid=ImgRaw&r=0',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
                     'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
                 ]
             };
 
-            // Function to update card links with current images
+            // Sample comments for each attraction
+            const attractionComments = {
+                'casbah': [
+                    {
+                        name: 'Sarah Martin',
+                        avatar: 'https://i.pravatar.cc/150?img=1',
+                        time: '2 hours ago',
+                        text: 'J\'ai visité cet endroit l\'année dernière et c\'était vraiment magnifique ! L\'architecture est impressionnante et l\'ambiance est unique. Je recommande vivement cette visite.'
+                    },
+                    {
+                        name: 'Mohammed Ali',
+                        avatar: 'https://i.pravatar.cc/150?img=2',
+                        time: '5 hours ago',
+                        text: 'Un lieu historique fascinant ! Les guides sont très compétents et les explications sont détaillées. N\'oubliez pas de prendre des photos, c\'est vraiment photogénique.'
+                    },
+
+                    {
+                        name: 'Sarh Martin',
+                        avatar: 'https://i.pravatar.cc/150?img=1',
+                        time: '2 hours ago',
+                        text: 'J\'ai visité cet endroit l\'année dernière et c\'était vraiment magnifique ! L\'architecture est impressionnante et l\'ambiance est unique. Je recommande vivement cette visite.'
+                    },
+
+                    {
+                        name: 'Srah Martin',
+                        avatar: 'https://i.pravatar.cc/150?img=1',
+                        time: '2 hours ago',
+                        text: 'J\'ai visité cet endroit l\'année dernière et c\'était vraiment magnifique ! L\'architecture est impressionnante et l\'ambiance est unique. Je recommande vivement cette visite.'
+                    },
+
+
+                ],
+                'dame': [
+                    {
+                        name: 'Jean Dupont',
+                        avatar: 'https://i.pravatar.cc/150?img=4',
+                        time: '3 hours ago',
+                        text: 'Un endroit magique ! La vue est spectaculaire et l\'histoire du lieu est captivante. Je reviendrai certainement.'
+                    },
+                    {
+                        name: 'Leila Benali',
+                        avatar: 'https://i.pravatar.cc/150?img=5',
+                        time: '1 day ago',
+                        text: 'La beauté naturelle de cet endroit est incomparable. Les couleurs au coucher du soleil sont à ne pas manquer.'
+                    }
+                ],
+                'jardin': [
+                    {
+                        name: 'Emma Dubois',
+                        avatar: 'https://i.pravatar.cc/150?img=13',
+                        time: '1 day ago',
+                        text: 'Un jardin magnifique avec une grande variété de plantes. Parfait pour une promenade paisible.'
+                    },
+                    {
+                        name: 'Thomas Bernard',
+                        avatar: 'https://i.pravatar.cc/150?img=14',
+                        time: '2 days ago',
+                        text: 'Un véritable havre de paix au cœur de la ville. Les allées sont bien entretenues et les plantes sont magnifiques.'
+                    }
+                ]
+            };
+
+            // Function to update card links with current images and comments
             function updateCardLinks() {
                 const cards = document.querySelectorAll('a[href*="card-details.html"]');
                 cards.forEach(card => {
                     const id = card.getAttribute('href').split('id=')[1].split('&')[0];
                     const title = card.getAttribute('href').split('title=')[1].split('&')[0];
                     const images = attractions[id];
+                    const comments = attractionComments[id] || [];
                     if (images) {
                         const encodedImages = encodeURIComponent(JSON.stringify(images));
-                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}`;
+                        const encodedComments = encodeURIComponent(JSON.stringify(comments));
+                        card.href = `../card-details.html?id=${id}&title=${title}&images=${encodedImages}&comments=${encodedComments}`;
                     }
                 });
             }
@@ -266,6 +234,119 @@
             // Initial update of card links
             updateCardLinks();
         });
+
+        // Login modal functions
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Signup modal functions
+        function showSignupForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            loginModal.classList.remove('flex');
+            loginModal.classList.add('hidden');
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        }
+
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('flex');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            if (event.target === loginModal) {
+                hideLoginModal();
+            }
+            if (event.target === signupModal) {
+                hideSignupModal();
+            }
+        });
+
+        // Add Place functionality
+        function checkAuthAndShowAddPlaceForm() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                showAddPlaceModal();
+            } else {
+                showAuthWarningModal();
+            }
+        }
+
+        function showAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Trigger reflow
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function showAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Trigger reflow
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAuthWarningLogin() {
+            hideAuthWarningModal();
+            setTimeout(() => {
+                showLoginModal();
+            }, 200);
+        }
+
+        // Handle add place form submission
+        document.querySelector('#addPlaceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            console.log('Form submitted:', Object.fromEntries(formData));
+            hideAddPlaceModal();
+        });
     </script>
 </head>
 
@@ -275,15 +356,20 @@
             <a href="../index.html">
                 <img src="../images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
             </a>
-            <button onclick="checkAuthAndShowAddPlaceForm()"
-                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2">
-                <i class="fas fa-plus"></i>
-                Add Place
-            </button>
+            <div class="flex gap-4">
+                <a href="../demandes.html" id="adminDemandesButton"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors whitespace-nowrap cursor-pointer hidden">
+                    Voir les demandes
+                </a>
+                <button onclick="checkAuthAndShowAddPlaceForm()"
+                    class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer">
+                    Ajouter un lieu
+                </button>
+            </div>
             <div class="relative w-1/2">
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="search" placeholder="Search in Bejaia"
+                    <input type="search" placeholder="Search in Alger"
                         class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
                     <button type="submit"
                         class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
@@ -299,21 +385,21 @@
     </div>
 
     <div class="p-0">
-        <h1 class="city-name">BEJAIA</h1>
+        <h1 class="city-name">Cultural and Heritage</h1>
     </div>
 
     <!-- Tourist Attractions Section -->
     <div class="container mx-auto px-4 py-16 max-w-[1152px]">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cap Carbon Card -->
-            <a href="../card-details.html?id=capcarbon&title=Cap%20Carbon&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Casbah Card -->
+            <a href="../card-details.html?id=casbah&title=Casbah%20d%27Alger&images=%5B%22https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOIP.HesHo9l_-xaCy-jBujktJgHaE8%3Fcb%3Diwc1%26rs%3D1%26pid%3DImgDetMain%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="cap-carbon">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Cap-Carbon-Bejaia.jpg"
-                                alt="Cap Carbon"
+                        <div class="relative h-72 image-gallery" data-gallery="casbah">
+                            <img src="https://tse2.mm.bing.net/th/id/OIP.HesHo9l_-xaCy-jBujktJgHaE8?cb=iwc1&rs=1&pid=ImgDetMain"
+                                alt="Casbah d'Alger"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -334,40 +420,50 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Cap Carbon</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Casbah d'Alger</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
-                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
-                            <span class="ml-2 text-gray-600">4,7</span>
-                            <span class="ml-2 text-gray-400">(523)</span>
+                            <span class="ml-2 text-gray-600">4.3</span>
+                            <span class="ml-2 text-gray-400">(469)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Point de vue</p>
-                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Quartiers</p>
+                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-tree text-[#52C41A]"></i>
+                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
                             </div>
-                            <span class="text-gray-600">Nature</span>
+                            <span class="text-gray-600">Cultural and Heritage</span>
                         </div>
-                        <p class="text-gray-700">Un magnifique cap offrant une vue panoramique sur la mer Méditerranée
-                            et la ville de Bejaia.</p>
+                        <div class="flex items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name=520riadb" alt="520riadb"
+                                class="w-8 h-8 rounded-full mr-2">
+                            <div>
+                                <span class="text-gray-600">Par </span>
+                                <span class="font-medium">520riadb</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">La casbah d'Alger, classée au patrimoine mondial de l'UNESCO, est un
+                            quartier historique qui témoigne de l'histoire riche de la ville. Ses ruelles étroites, ses
+                            maisons traditionnelles et ses monuments historiques en font un lieu incontournable pour les
+                            visiteurs.</p>
                     </div>
                 </div>
             </a>
 
-            <!-- Gouraya National Park Card -->
-            <a href="../card-details.html?id=gouraya&title=Gouraya%20National%20Park&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Notre Dame d'Afrique Card -->
+            <a href="../card-details.html?id=notre-dame&title=Notre%20Dame%20d%27Afrique&images=%5B%22https%3A%2F%2Fwww.algeria.com%2Fwp-content%2Fuploads%2F2018%2F12%2FNotre-Dame-dAfrique.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="gouraya">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Gouraya-National-Park-Bejaia.jpg"
-                                alt="Gouraya National Park"
+                        <div class="relative h-72 image-gallery" data-gallery="notre-dame">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Notre-Dame-dAfrique.jpg"
+                                alt="Notre Dame d'Afrique"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -388,7 +484,7 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Gouraya National Park</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Notre Dame d'Afrique</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
@@ -398,30 +494,30 @@
                                 <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
                             <span class="ml-2 text-gray-600">4,5</span>
-                            <span class="ml-2 text-gray-400">(387)</span>
+                            <span class="ml-2 text-gray-400">(739)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Parc National</p>
-                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Églises et cathédrales</p>
+                        <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-tree text-[#52C41A]"></i>
+                                <i class="fas fa-mosque text-[#1890FF]"></i>
                             </div>
-                            <span class="text-gray-600">Nature</span>
+                            <span class="text-gray-600">Religious</span>
                         </div>
-                        <p class="text-gray-700">Un parc national magnifique avec une riche biodiversité et des sentiers
-                            de randonnée spectaculaires.</p>
+                        <p class="text-gray-700">Basilique d'Alger surplombant la baie de la capitale, richement décorée
+                            dans le style hispano-mauresque.</p>
                     </div>
                 </div>
             </a>
 
-            <!-- Yemma Gouraya Card -->
-            <a href="../card-details.html?id=yemma&title=Yemma%20Gouraya&images=%5B%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
+            <!-- Jardin d'Essai Card -->
+            <a href="../card-details.html?id=jardin&title=Le%20Jardin%20d%27Essai%20du%20Hamma&images=%5B%22https%3A%2F%2Fwww.algeria.com%2Fwp-content%2Fuploads%2F2018%2F12%2FJardin-dEssai.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D"
                 class="block cursor-pointer group">
                 <div
                     class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                     <div class="relative">
-                        <div class="relative h-72 image-gallery" data-gallery="yemma-gouraya">
-                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Yemma-Gouraya-Bejaia.jpg"
-                                alt="Yemma Gouraya"
+                        <div class="relative h-72 image-gallery" data-gallery="jardin">
+                            <img src="https://www.algeria.com/wp-content/uploads/2018/12/Jardin-dEssai.jpg"
+                                alt="Le Jardin d'Essai du Hamma"
                                 class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
                             <!-- Navigation Arrows -->
                             <button
@@ -442,102 +538,30 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Yemma Gouraya</h3>
+                        <h3 class="text-xl font-bold mb-2 group-hover:underline">Le Jardin d'Essai du Hamma</h3>
                         <div class="flex items-center mb-2">
                             <div class="flex">
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
                                 <i class="fas fa-star text-green-500"></i>
-                                <i class="fas fa-star text-green-500"></i>
+                                <i class="fas fa-star-half-alt text-green-500"></i>
                             </div>
-                            <span class="ml-2 text-gray-600">4,8</span>
-                            <span class="ml-2 text-gray-400">(612)</span>
+                            <span class="ml-2 text-gray-600">4,4</span>
+                            <span class="ml-2 text-gray-400">(887)</span>
                         </div>
-                        <p class="text-gray-600 mb-4">Site historique</p>
-                        <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                        <p class="text-gray-600 mb-4">Jardins</p>
+                        <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
-                                <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                                <i class="fas fa-tree text-[#52C41A]"></i>
                             </div>
-                            <span class="text-gray-600">Cultural and Heritage</span>
+                            <span class="text-gray-600">Nature</span>
                         </div>
-                        <p class="text-gray-700">Un site historique et religieux important avec une vue imprenable sur
-                            la ville et la mer.</p>
+                        <p class="text-gray-700">Un magnifique jardin botanique avec des plantes et arbres du monde
+                            entier.</p>
                     </div>
                 </div>
             </a>
-        </div>
-    </div>
-
-    <!-- Add Place Modal -->
-    <div id="addPlaceModal"
-        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
-        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
-                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="addPlaceForm" class="space-y-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
-                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Description</label>
-                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
-                        placeholder="Entrez la description du lieu"></textarea>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Location</label>
-                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
-                        placeholder="Entrez la description du lieu"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-gray-700 mb-2">Catégorie</label>
-                    <select class="w-full px-3 py-2 border rounded-full">
-                        <option value="">Sélectionnez une catégorie</option>
-                        <option value="religious">Religieux</option>
-                        <option value="cultural">Culturel</option>
-                        <option value="nature">Nature</option>
-                        <option value="historical">Historique</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Images</label>
-                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
-                </div>
-                <button type="submit"
-                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
-                    Ajouter le lieu
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Auth Warning Modal -->
-    <div id="authWarningModal"
-        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
-        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">Authentication Required</h2>
-                <button onclick="hideAuthWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <p class="text-gray-600 mb-6">Please log in to add a new place.</p>
-            <div class="flex gap-4">
-                <button onclick="hideAuthWarningModal()"
-                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
-                    Cancel
-                </button>
-                <button onclick="handleAuthWarningLogin()"
-                    class="flex-1 bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
-                    Log In
-                </button>
-            </div>
         </div>
     </div>
 
@@ -614,6 +638,79 @@
             </form>
         </div>
     </div>
+
+    <!-- Add Place Modal -->
+    <div id="addPlaceModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addPlaceForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Location</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 mb-2">Catégorie</label>
+                    <select class="w-full px-3 py-2 border rounded-full">
+                        <option value="">Sélectionnez une catégorie</option>
+                        <option value="religious">Religieux</option>
+                        <option value="cultural">Culturel</option>
+                        <option value="nature">Nature</option>
+                        <option value="historical">Historique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Images</label>
+                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Ajouter le lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Warning Modal -->
+    <div id="authWarningModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Authentication Required</h2>
+                <button onclick="hideAuthWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Please log in to add a new place.</p>
+            <div class="flex gap-4">
+                <button onclick="hideAuthWarningModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="handleAuthWarningLogin()"
+                    class="flex-1 bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>
