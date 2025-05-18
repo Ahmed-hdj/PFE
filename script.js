@@ -147,7 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
             'https://th.bing.com/th/id/OIP.w6L4I-nCyzbyOAfVcNNY-AHaE8?w=275&h=183&c=7&r=0&o=5&cb=iwc1&pid=1.7',
             'https://th.bing.com/th/id/OIP.9N9m2Oroyy5UlF9mNu9TSwHaGN?w=239&h=200&c=7&r=0&o=5&cb=iwc1&pid=1.7',
             'https://th.bing.com/th/id/OIP.v4BfLE6kVfdCRf5e2x456QHaGL?w=219&h=183&c=7&r=0&o=5&cb=iwc1&pid=1.7',
-            'https://th.bing.com/th/id/OIP.56cC238AcgBam2khD8-TswHaEo?w=283&h=180&c=7&r=0&o=5&cb=iwc2&pid=1.7'
+            'https://th.bing.com/th/id/OIP.56cC238AcgBam2khD8-TswHaEo?w=283&h=180&c=7&r=0&o=5&cb=iwc2&pid=1.7',
+            'https://th.bing.com/th/id/OIP.rxsCGF6vMTq-Yca-vnQ_oQHaEK?w=262&h=180&c=7&r=0&o=5&cb=iwc2&pid=1.7'
 
         ],
         casbah: [
