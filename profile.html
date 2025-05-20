@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Algeria Tourism</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <div class="pt-24">
+        <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white shadow-md z-50">
+            <a href="/">
+                <img src="images and videos/ChatGPT Image 29 avr. 2025, 00_41_42.png" alt="Logo" class="h-16 w-auto">
+            </a>
+            <button onclick="showAddPlaceModal()"
+                class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer">
+                Ajouter un lieu
+            </button>
+            <div class="relative w-1/2">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="search" placeholder="Search in Alger"
+                        class="pl-10 pr-14 py-2 border-[1px] border-[#a1a1a1] rounded-full w-full focus:outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 [&::-webkit-search-cancel-button]:cursor-pointer">
+                    <button type="submit"
+                        class="absolute right-[2px] top-[2px] h-[92%] text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-r-full px-4 transition-colors flex items-center cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="showLoginModal()"
+                class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap cursor-pointer">
+                Se Connecter
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Profile Title -->
+        <h1 class="text-4xl font-bold text-gray-800 mb-8">Profile</h1>
+
+        <!-- Profile Card -->
+        <div class="bg-white mt-5 shadow-lg rounded-lg">
+            <!-- Profile Content -->
+            <div class="flex flex-col md:flex-row gap-8 p-8">
+                <!-- Profile Picture Section -->
+                <div id="largeProfilePicture" class="md:w-1/3">
+                    <div class="relative">
+                        <img id="profilePicture"
+                            src="https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                            alt="Profile Picture"
+                            class="w-full aspect-square rounded-lg object-cover border-4 border-white shadow-lg">
+                    </div>
+                </div>
+
+                <!-- Profile Information Section -->
+                <div class="md:w-2/3">
+                    <div id="profileView" class="space-y-6">
+                        <!-- Profile Header Info -->
+                        <div class="mb-8">
+                            <h2 id="displayName" class="text-3xl font-bold text-gray-800 mb-2">John Doe</h2>
+                            <p class="text-gray-600">Member since 2024</p>
+                        </div>
+
+                        <!-- Profile Information -->
+                        <div class="bg-gray-100 rounded-lg p-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Full Name</label>
+                                    <p id="viewFullName" class="mt-1 text-gray-800">John Doe</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Email</label>
+                                    <p id="viewEmail" class="mt-1 text-gray-800">john.doe@example.com</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Username</label>
+                                    <p id="viewUsername" class="mt-1 text-gray-800">johndoe</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600">Password</label>
+                                    <p id="viewPassword" class="mt-1 text-gray-800">••••••••</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edit Button -->
+                        <div class="flex justify-end">
+                            <button onclick="toggleEditMode()"
+                                class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                                Change Information
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Edit Form (Hidden by default) -->
+                    <div id="profileEdit" class="hidden space-y-6">
+                        <form id="editProfileForm" class="space-y-6">
+                            <!-- Profile Picture Upload -->
+                            <div class="flex items-center space-x-6">
+                                <div class="relative w-32 h-32">
+                                    <img id="editProfilePicture"
+                                        src="https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                                        alt="Profile Picture"
+                                        class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg">
+                                    <label for="profilePictureInput"
+                                        class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
+                                        <i class="fas fa-camera text-white text-2xl"></i>
+                                    </label>
+                                    <input type="file" id="profilePictureInput" accept="image/*" class="hidden"
+                                        onchange="previewProfilePicture(this)">
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Profile Picture</h3>
+                                    <p class="text-gray-600">Click on the image to change your profile picture</p>
+                                </div>
+                            </div>
+
+                            <!-- Edit Form Fields -->
+                            <div class="bg-white rounded-lg p-6 space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-600">Full Name</label>
+                                        <input type="text" id="editFullName"
+                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-600">Email</label>
+                                        <input type="email" id="editEmail"
+                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-600">Username</label>
+                                        <input type="text" id="editUsername"
+                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-600">New Password</label>
+                                        <input type="password" id="editPassword"
+                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Save/Cancel Buttons -->
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" onclick="toggleEditMode()"
+                                    class="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Places Section -->
+        <div class="mt-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Saved Places</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Jardin d'Essai Card -->
+                <a href="card-details.html?id=jardin&title=Le%20Jardin%20d%27Essai%20du%20Hamma&images=%5B%22https%3A%2F%2Fc1.staticflickr.com%2F1%2F276%2F32193070856_d5137fac58_h.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D&comments=%5B%7B%22name%22%3A%22Emma%20Dubois%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D13%22%2C%22time%22%3A%221%20day%20ago%22%2C%22text%22%3A%22Un%20jardin%20magnifique%20avec%20une%20grande%20vari%C3%A9t%C3%A9%20de%20plantes.%20Parfait%20pour%20une%20promenade%20paisible.%22%7D%2C%7B%22name%22%3A%22Thomas%20Bernard%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D14%22%2C%22time%22%3A%222%20days%20ago%22%2C%22text%22%3A%22Un%20v%C3%A9ritable%20havre%20de%20paix%20au%20c%C5%93ur%20de%20la%20ville.%20Les%20all%C3%A9es%20sont%20bien%20entretenues%20et%20les%20plantes%20sont%20magnifiques.%22%7D%5D"
+                    class="block cursor-pointer group">
+                    <div
+                        class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                        <div class="relative">
+                            <div class="relative h-72 image-gallery" data-gallery="jardin">
+                                <img src="https://c1.staticflickr.com/1/276/32193070856_d5137fac58_h.jpg"
+                                    alt="Le Jardin d'Essai du Hamma"
+                                    class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                                <!-- Navigation Arrows -->
+                                <button
+                                    class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                    <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                </button>
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 group-hover:underline">Le Jardin d'Essai du Hamma</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex">
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star-half-alt text-green-500"></i>
+                                </div>
+                                <span class="ml-2 text-gray-600">4,4</span>
+                                <span class="ml-2 text-gray-400">(887)</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">Jardins</p>
+                            <div class="flex items-center mb-4 bg-[#F6FFED] p-2 rounded-lg">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-tree text-[#52C41A]"></i>
+                                </div>
+                                <span class="text-gray-600">Nature</span>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <img src="https://ui-avatars.com/api/?name=Ovnitoring" alt="Ovnitoring"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <div>
+                                    <span class="text-gray-600">Par </span>
+                                    <span class="font-medium">Ovnitoring</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-700">Vous pouvez vous perdre dans les différente allées de plantes et
+                                arbres du monde entier</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Basilique Notre-Dame Card -->
+                <a href="card-details.html?id=notredame&title=Notre%20Dame%20d%27Afrique&images=%5B%22https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FOIP.w6L4I-nCyzbyOAfVcNNY-AHaE8%3Fw%3D275%26h%3D183%26c%3D7%26r%3D0%26o%3D5%26cb%3Diwc1%26pid%3D1.7%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D&comments=%5B%7B%22name%22%3A%22Jean%20Dupont%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D4%22%2C%22time%22%3A%223%20hours%20ago%22%2C%22text%22%3A%22Un%20endroit%20magique%20!%20La%20vue%20est%20spectaculaire%20et%20l%27histoire%20du%20lieu%20est%20captivante.%20Je%20reviendrai%20certainement.%22%7D%2C%7B%22name%22%3A%22Leila%20Benali%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D5%22%2C%22time%22%3A%221%20day%20ago%22%2C%22text%22%3A%22La%20beaut%C3%A9%20naturelle%20de%20cet%20endroit%20est%20incomparable.%20Les%20couleurs%20au%20coucher%20du%20soleil%20sont%20%C3%A0%20ne%20pas%20manquer.%22%7D%5D"
+                    class="block cursor-pointer group">
+                    <div
+                        class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                        <div class="relative">
+                            <div class="relative h-72 image-gallery" data-gallery="notredame">
+                                <img src="https://th.bing.com/th/id/OIP.w6L4I-nCyzbyOAfVcNNY-AHaE8?w=275&h=183&c=7&r=0&o=5&cb=iwc1&pid=1.7"
+                                    alt="Basilique Notre-Dame d'Afrique"
+                                    class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                                <!-- Navigation Arrows -->
+                                <button
+                                    class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                    <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                </button>
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 group-hover:underline">Basilique Notre-Dame d'Afrique</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex">
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star-half-alt text-green-500"></i>
+                                </div>
+                                <span class="ml-2 text-gray-600">4,5</span>
+                                <span class="ml-2 text-gray-400">(739)</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">Églises et cathédrales</p>
+                            <div class="flex items-center mb-4 bg-[#E6F7FF] p-2 rounded-lg">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-mosque text-[#1890FF]"></i>
+                                </div>
+                                <span class="text-gray-600">Religious</span>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <img src="https://ui-avatars.com/api/?name=AlgeriaTravel" alt="AlgeriaTravel"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <div>
+                                    <span class="text-gray-600">Par </span>
+                                    <span class="font-medium">AlgeriaTravel</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-700">Basilique d'Alger surplombant la baie de la capitale. Achevé en
+                                1872,
+                                ce magnifique bâtiment d'architecture néo-byzantine est richement décoré à l'intérieur
+                                dans
+                                le décor hispano-mauresque. Unique...</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Casbah Card -->
+                <a href="card-details.html?id=casbah&title=Casbah%20d%27Alger&images=%5B%22https%3A%2F%2Fc1.staticflickr.com%2F1%2F507%2F32124243810_ebb256b3a1_h.jpg%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%2C%22https%3A%2F%2Fimages.unsplash.com%2Fphoto-1517245386807-bb43f82c33c4%3Fw%3D800%26auto%3Dformat%26fit%3Dcrop%26q%3D60%22%5D&comments=%5B%7B%22name%22%3A%22Sarah%20Martin%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D1%22%2C%22time%22%3A%222%20hours%20ago%22%2C%22text%22%3A%22J%27ai%20visit%C3%A9%20cet%20endroit%20l%27ann%C3%A9e%20derni%C3%A8re%20et%20c%27%C3%A9tait%20vraiment%20magnifique%20!%20L%27architecture%20est%20impressionnante%20et%20l%27ambiance%20est%20unique.%20Je%20recommande%20vivement%20cette%20visite.%22%7D%2C%7B%22name%22%3A%22Mohammed%20Ali%22%2C%22avatar%22%3A%22https%3A%2F%2Fi.pravatar.cc%2F150%3Fimg%3D2%22%2C%22time%22%3A%225%20hours%20ago%22%2C%22text%22%3A%22Un%20lieu%20historique%20fascinant%20!%20Les%20guides%20sont%20tr%C3%A8s%20comp%C3%A9tents%20et%20les%20explications%20sont%20d%C3%A9taill%C3%A9es.%20N%27oubliez%20pas%20de%20prendre%20des%20photos%2C%20c%27est%20vraiment%20photog%C3%A9nique.%22%7D%5D"
+                    class="block cursor-pointer group">
+                    <div
+                        class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                        <div class="relative">
+                            <div class="relative h-72 image-gallery" data-gallery="casbah">
+                                <img src="https://c1.staticflickr.com/1/507/32124243810_ebb256b3a1_h.jpg"
+                                    alt="Casbah d'Alger"
+                                    class="w-full h-full object-cover transition-opacity duration-300 hover:opacity-80">
+                                <!-- Navigation Arrows -->
+                                <button
+                                    class="nav-arrow prev absolute left-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-left text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="nav-arrow next absolute right-4 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition-all z-30 cursor-pointer">
+                                    <i class="fas fa-chevron-right text-gray-800 text-xl"></i>
+                                </button>
+                                <button
+                                    class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10">
+                                    <i class="fa-regular fa-bookmark text-gray-600"></i>
+                                </button>
+                            </div>
+                            <div
+                                class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 group-hover:underline">Casbah d'Alger</h3>
+                            <div class="flex items-center mb-2">
+                                <div class="flex">
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star text-green-500"></i>
+                                    <i class="fas fa-star-half-alt text-green-500"></i>
+                                </div>
+                                <span class="ml-2 text-gray-600">4,3</span>
+                                <span class="ml-2 text-gray-400">(469)</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">Quartiers</p>
+                            <div class="flex items-center mb-4 bg-[#FFE5D9] p-2 rounded-lg">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                                    <i class="fas fa-landmark text-[#FF7D5C]"></i>
+                                </div>
+                                <span class="text-gray-600">Cultural and Heritage</span>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <img src="https://ui-avatars.com/api/?name=520riadb" alt="520riadb"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <div>
+                                    <span class="text-gray-600">Par </span>
+                                    <span class="font-medium">520riadb</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-700">Un site du patrimoine mondial de l'UNESCO connu pour ses formations
+                                rocheuses spectaculaires et ses peintures rupestres préhistoriques.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Connexion</h2>
+                <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Se Connecter
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showSignupForm()"
+                        class="text-blue-500 hover:text-blue-700 underline">S'inscrire</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signupModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Inscription</h2>
+                <button onclick="hideSignupModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signupForm" class="space-y-4">
+                <div class="flex flex-col items-center mb-4">
+                    <div class="relative w-32 h-32 mb-4">
+                        <img id="profilePreview"
+                            src="https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                            alt="Profile Preview"
+                            class="w-full h-full rounded-full object-cover border-[4px] grayscale border-dashed border-[#393434]">
+                        <label for="profilePicture"
+                            class="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full cursor-pointer hover:bg-black/40 transition-colors">
+                            <i class="fas fa-plus text-white text-2xl"></i>
+                        </label>
+                        <input type="file" id="profilePicture" accept="image/*" class="hidden"
+                            onchange="previewProfilePicture(this)">
+                    </div>
+                    <p class="text-sm text-gray-500">Click to add a profile picture</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Entrez votre nom complet">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez votre email">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Créez votre mot de passe">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Confirmer le mot de passe</label>
+                    <input type="password" class="w-full px-3 py-2 border rounded-full"
+                        placeholder="Confirmez votre mot de passe">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    S'inscrire
+                </button>
+                <div class="text-center mt-4">
+                    <a href="#" onclick="showLoginForm()" class="text-blue-500 hover:text-blue-700 underline">Déjà un
+                        compte ? Se connecter</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Place Modal -->
+    <div id="addPlaceModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addPlaceForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                    <input type="text" class="w-full px-3 py-2 border rounded-full" placeholder="Entrez le nom du lieu">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Location</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Entrez la description du lieu"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 mb-2">Catégorie</label>
+                    <select class="w-full px-3 py-2 border rounded-full">
+                        <option value="">Sélectionnez une catégorie</option>
+                        <option value="religious">Religieux</option>
+                        <option value="cultural">Culturel</option>
+                        <option value="nature">Nature</option>
+                        <option value="historical">Historique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Images</label>
+                    <input type="file" class="w-full px-3 py-2 border rounded-full" multiple accept="image/*">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Ajouter le lieu
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Warning Modal -->
+    <div id="authWarningModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Authentication Required</h2>
+                <button onclick="hideAuthWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Please log in to add a new place.</p>
+            <div class="flex gap-4">
+                <button onclick="hideAuthWarningModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="handleAuthWarningLogin()"
+                    class="flex-1 bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image gallery functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const attractions = {
+                jardin: {
+                    images: [
+                        'https://c1.staticflickr.com/1/276/32193070856_d5137fac58_h.jpg',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                    ]
+                },
+                notredame: {
+                    images: [
+                        'https://th.bing.com/th/id/OIP.w6L4I-nCyzbyOAfVcNNY-AHaE8?w=275&h=183&c=7&r=0&o=5&cb=iwc1&pid=1.7',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                    ]
+                },
+                casbah: {
+                    images: [
+                        'https://c1.staticflickr.com/1/507/32124243810_ebb256b3a1_h.jpg',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60',
+                        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=60'
+                    ]
+                }
+            };
+
+            // Initialize galleries if they exist
+            const galleries = document.querySelectorAll('.image-gallery');
+            if (galleries.length > 0) {
+                console.log('Initializing', galleries.length, 'image galleries');
+
+                galleries.forEach(gallery => {
+                    const galleryName = gallery.dataset.gallery;
+                    const attraction = attractions[galleryName];
+
+                    if (!attraction) {
+                        console.warn('No images found for gallery:', galleryName);
+                        return;
+                    }
+
+                    const img = gallery.querySelector('img');
+                    const dotsContainer = gallery.parentElement.querySelector('.dots-container');
+                    let currentIndex = 0;
+                    const maxVisibleDots = 5;
+
+                    function createDots() {
+                        dotsContainer.innerHTML = '';
+                        const totalImages = attraction.images.length;
+                        const startDot = Math.max(0, Math.min(currentIndex - 2, totalImages - maxVisibleDots));
+                        const endDot = Math.min(startDot + maxVisibleDots, totalImages);
+
+                        // Add sliding animation class
+                        dotsContainer.classList.add('sliding');
+
+                        // Remove animation class after transition
+                        setTimeout(() => {
+                            dotsContainer.classList.remove('sliding');
+                        }, 300);
+
+                        for (let i = startDot; i < endDot; i++) {
+                            const dot = document.createElement('div');
+                            dot.className = 'w-2 h-2 rounded-full bg-white transition-all duration-300';
+                            dot.style.opacity = i === currentIndex ? '1' : '0.5';
+                            dot.style.cursor = 'pointer';
+                            dot.addEventListener('click', () => updateImage(i));
+                            dotsContainer.appendChild(dot);
+                        }
+                    }
+
+                    function updateImage(newIndex) {
+                        currentIndex = newIndex;
+                        img.src = attraction.images[currentIndex];
+                        createDots(); // Recreate dots to show the correct range
+                    }
+
+                    // Initial dots creation
+                    createDots();
+
+                    const prevBtn = gallery.querySelector('.nav-arrow.prev');
+                    const nextBtn = gallery.querySelector('.nav-arrow.next');
+
+                    if (prevBtn && nextBtn) {
+                        prevBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const newIndex = (currentIndex - 1 + attraction.images.length) % attraction.images.length;
+                            updateImage(newIndex);
+                        });
+
+                        nextBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const newIndex = (currentIndex + 1) % attraction.images.length;
+                            updateImage(newIndex);
+                        });
+                    } else {
+                        console.warn('Navigation buttons not found for gallery:', galleryName);
+                    }
+                });
+            }
+
+            // Bookmark functionality
+            const bookmarkButtons = document.querySelectorAll('.fa-bookmark');
+            bookmarkButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.classList.toggle('fa-regular');
+                    this.classList.toggle('fa-solid');
+                    this.classList.toggle('text-gray-600');
+                    this.classList.toggle('text-blue-500');
+                });
+            });
+        });
+
+        // Login modal functions
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Signup modal functions
+        function showSignupForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            loginModal.classList.remove('flex');
+            loginModal.classList.add('hidden');
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        }
+
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('flex');
+        }
+
+        // Add Place modal functions
+        function showAddPlaceModal() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                const modal = document.getElementById('addPlaceModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                showAuthWarningModal();
+            }
+        }
+
+        function hideAddPlaceModal() {
+            const modal = document.getElementById('addPlaceModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Auth Warning modal functions
+        function showAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAuthWarningLogin() {
+            hideAuthWarningModal();
+            setTimeout(() => {
+                showLoginModal();
+            }, 200);
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your login logic here
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', 'admin'); // For testing - remove in production
+            hideLoginModal();
+        });
+
+        // Handle signup form submission
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your signup logic here
+            localStorage.setItem('isLoggedIn', 'true');
+            hideSignupModal();
+        });
+
+        // Handle add place form submission
+        document.getElementById('addPlaceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            hideAddPlaceModal();
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function (event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            const addPlaceModal = document.getElementById('addPlaceModal');
+            const authWarningModal = document.getElementById('authWarningModal');
+
+            if (event.target === loginModal) {
+                hideLoginModal();
+            }
+            if (event.target === signupModal) {
+                hideSignupModal();
+            }
+            if (event.target === addPlaceModal) {
+                hideAddPlaceModal();
+            }
+            if (event.target === authWarningModal) {
+                hideAuthWarningModal();
+            }
+        });
+
+        // Function to toggle between view and edit modes
+        function toggleEditMode() {
+            const viewSection = document.getElementById('profileView');
+            const editSection = document.getElementById('profileEdit');
+            const largeProfilePicture = document.getElementById('largeProfilePicture');
+
+            if (viewSection.classList.contains('hidden')) {
+                // Switch to view mode
+                viewSection.classList.remove('hidden');
+                editSection.classList.add('hidden');
+                largeProfilePicture.classList.remove('hidden');
+            } else {
+                // Switch to edit mode
+                viewSection.classList.add('hidden');
+                editSection.classList.remove('hidden');
+                largeProfilePicture.classList.add('hidden');
+
+                // Populate edit form with current values
+                document.getElementById('editFullName').value = document.getElementById('viewFullName').textContent;
+                document.getElementById('editEmail').value = document.getElementById('viewEmail').textContent;
+                document.getElementById('editUsername').value = document.getElementById('viewUsername').textContent;
+            }
+        }
+
+        // Function to preview profile picture
+        function previewProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('editProfilePicture').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Handle profile form submission
+        document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Update view mode with new values
+            document.getElementById('viewFullName').textContent = document.getElementById('editFullName').value;
+            document.getElementById('viewEmail').textContent = document.getElementById('editEmail').value;
+            document.getElementById('viewUsername').textContent = document.getElementById('editUsername').value;
+            document.getElementById('profilePicture').src = document.getElementById('editProfilePicture').src;
+
+            // If password was changed, update the dots
+            const newPassword = document.getElementById('editPassword').value;
+            if (newPassword) {
+                document.getElementById('viewPassword').textContent = '••••••••';
+            }
+
+            // Switch back to view mode
+            toggleEditMode();
+
+            // Clear password field
+            document.getElementById('editPassword').value = '';
+        });
+    </script>
+</body>
+
+</html>

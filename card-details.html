@@ -125,6 +125,20 @@
                         class="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-4 z-20 dots-container transition-transform duration-300">
                     </div>
                 </div>
+                <!-- Add Image Button -->
+                <div class="mt-4 space-y-4">
+                    <button onclick="checkAuthAndShowAddImageForm()"
+                        class="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-images"></i>
+                        Add an Image
+                    </button>
+                    <!-- Delete Button - Now visible -->
+                    <button id="deleteImageBtn" onclick="checkAuthAndDeleteImage()"
+                        class="w-full bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete Place
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -266,6 +280,103 @@
         </div>
     </div>
 
+    <!-- Add Image Modal -->
+    <div id="addImageModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-[500px] shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Add an Image</h2>
+                <button onclick="hideAddImageModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addImageForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Image</label>
+                    <input type="file" accept="image/*" class="w-full px-3 py-2 border rounded-full">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Description (optional)</label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="3"
+                        placeholder="Add a description for this image"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition-colors cursor-pointer">
+                    Upload Image
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Warning Modal -->
+    <div id="authWarningModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Authentication Required</h2>
+                <button onclick="hideAuthWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Please log in to add an image.</p>
+            <div class="flex gap-4">
+                <button onclick="hideAuthWarningModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="handleAuthWarningLogin()"
+                    class="flex-1 bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                    Log In
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Warning Modal -->
+    <div id="adminWarningModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Admin Verification Required</h2>
+                <button onclick="hideAdminWarningModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">You do not have permission to delete places.</p>
+            <div class="flex gap-4">
+                <button onclick="hideAdminWarningModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmationModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+        <div class="bg-white p-8 rounded-lg w-96 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Confirm Deletion</h2>
+                <button onclick="hideDeleteConfirmationModal()"
+                    class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Are you sure you want to delete this place?</p>
+            <div class="flex gap-4">
+                <button onclick="hideDeleteConfirmationModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-full hover:bg-gray-300 transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="handleDeleteConfirmation()"
+                    class="flex-1 bg-red-500 text-white py-2 rounded-full hover:bg-red-600 transition-colors cursor-pointer">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
         // Get card details from URL parameters
@@ -364,43 +475,111 @@
         }
 
         // Modal functionality
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-            document.getElementById(modalId).classList.add('flex');
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.getElementById(modalId).classList.remove('flex');
+        function hideLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
         }
 
-        document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
-        document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+        function showSignupForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            loginModal.classList.remove('flex');
+            loginModal.classList.add('hidden');
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        }
 
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('fixed')) {
-                e.target.classList.add('hidden');
-                e.target.classList.remove('flex');
+        function hideSignupModal() {
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+        }
+
+        function showLoginForm() {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            signupModal.classList.remove('flex');
+            signupModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('flex');
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your login logic here
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', 'admin'); // For testing - remove in production
+            // updateDeleteButtonVisibility(); // Commented out for testing
+            hideLoginModal();
+        });
+
+        // Handle signup form submission
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your signup logic here
+            localStorage.setItem('isLoggedIn', 'true');
+            hideSignupModal();
+        });
+
+        // Function to check auth and show comment form
+        function checkAuthAndShowCommentForm() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                return true;
+            } else {
+                showAuthWarningModal('comment');
+                return false;
             }
-        });
+        }
 
-        // Handle form submissions
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add login logic here
-            closeModal('loginModal');
-        });
+        function showAuthWarningModal(context = 'comment') {
+            const modal = document.getElementById('authWarningModal');
+            const message = modal.querySelector('p');
+            message.textContent = context === 'comment' ?
+                'Please log in to post a comment.' :
+                context === 'image' ?
+                    'Please log in to add an image.' :
+                    context === 'delete' ?
+                        'Please log in to delete images.' :
+                        'Please log in to add a new place.';
 
-        document.getElementById('signupForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add signup logic here
-            closeModal('signupModal');
-        });
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAuthWarningModal() {
+            const modal = document.getElementById('authWarningModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAuthWarningLogin() {
+            hideAuthWarningModal();
+            setTimeout(() => {
+                showLoginModal();
+            }, 200);
+        }
 
         // Handle comment submission
         document.getElementById('commentForm').addEventListener('submit', (e) => {
             e.preventDefault();
+            if (!checkAuthAndShowCommentForm()) {
+                return;
+            }
             const commentText = e.target.querySelector('textarea').value;
             if (commentText.trim()) {
                 // Add comment logic here
@@ -410,9 +589,14 @@
 
         // Add Place modal functions
         function showAddPlaceModal() {
-            const modal = document.getElementById('addPlaceModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                const modal = document.getElementById('addPlaceModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                showAuthWarningModal('comment');
+            }
         }
 
         function hideAddPlaceModal() {
@@ -426,6 +610,10 @@
             const loginModal = document.getElementById('loginModal');
             const signupModal = document.getElementById('signupModal');
             const addPlaceModal = document.getElementById('addPlaceModal');
+            const addImageModal = document.getElementById('addImageModal');
+            const authWarningModal = document.getElementById('authWarningModal');
+            const adminWarningModal = document.getElementById('adminWarningModal');
+            const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
 
             if (event.target === loginModal) {
                 hideLoginModal();
@@ -436,6 +624,18 @@
             if (event.target === addPlaceModal) {
                 hideAddPlaceModal();
             }
+            if (event.target === addImageModal) {
+                hideAddImageModal();
+            }
+            if (event.target === authWarningModal) {
+                hideAuthWarningModal();
+            }
+            if (event.target === adminWarningModal) {
+                hideAdminWarningModal();
+            }
+            if (event.target === deleteConfirmationModal) {
+                hideDeleteConfirmationModal();
+            }
         });
 
         // Handle Add Place form submission
@@ -444,6 +644,135 @@
             // Add your form submission logic here
             hideAddPlaceModal();
         });
+
+        // Function to check auth and show add image form
+        function checkAuthAndShowAddImageForm() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                showAddImageModal();
+            } else {
+                showAuthWarningModal('image');
+            }
+        }
+
+        function showAddImageModal() {
+            const modal = document.getElementById('addImageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function hideAddImageModal() {
+            const modal = document.getElementById('addImageModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // Handle Add Image form submission
+        document.getElementById('addImageForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your image upload logic here
+            hideAddImageModal();
+        });
+
+        // Function to check and update delete button visibility
+        function updateDeleteButtonVisibility() {
+            /*
+            const deleteBtn = document.getElementById('deleteImageBtn');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const isAdmin = localStorage.getItem('userRole') === 'admin';
+            
+            if (isLoggedIn && isAdmin) {
+                deleteBtn.classList.remove('hidden');
+            } else {
+                deleteBtn.classList.add('hidden');
+            }
+            */
+        }
+
+        // Update delete button visibility when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // updateDeleteButtonVisibility(); // Commented out for testing
+        });
+
+        // Update delete button visibility after login
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your login logic here
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', 'admin'); // For testing - remove in production
+            // updateDeleteButtonVisibility(); // Commented out for testing
+            hideLoginModal();
+        });
+
+        // Update delete button visibility after logout
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userRole');
+            // updateDeleteButtonVisibility(); // Commented out for testing
+        }
+
+        // Function to check auth and admin status for delete button
+        function checkAuthAndDeleteImage() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const isAdmin = localStorage.getItem('userRole') === 'admin';
+
+            if (!isLoggedIn) {
+                showAuthWarningModal('delete');
+                return;
+            }
+
+            if (!isAdmin) {
+                showAdminWarningModal();
+                return;
+            }
+
+            // Show delete confirmation modal
+            showDeleteConfirmationModal();
+        }
+
+        // Function to show admin warning modal
+        function showAdminWarningModal() {
+            const modal = document.getElementById('adminWarningModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideAdminWarningModal() {
+            const modal = document.getElementById('adminWarningModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Function to show delete confirmation modal
+        function showDeleteConfirmationModal() {
+            const modal = document.getElementById('deleteConfirmationModal');
+            modal.style.opacity = '0';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.offsetHeight;
+            modal.style.opacity = '1';
+        }
+
+        function hideDeleteConfirmationModal() {
+            const modal = document.getElementById('deleteConfirmationModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Handle delete confirmation
+        function handleDeleteConfirmation() {
+            // Add your delete logic here
+            hideDeleteConfirmationModal();
+        }
     </script>
 </body>
 
