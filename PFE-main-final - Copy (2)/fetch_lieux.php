@@ -11,7 +11,7 @@ try {
 
     // Fetch approved lieux with related information
     $query = "SELECT l.*, c.category_name, w.wilaya_name, 
-              GROUP_CONCAT(li.image_url) as images,
+              GROUP_CONCAT(CASE WHEN li.status_photo = 'approved' THEN li.image_url END) as images,
               u.username as author_name,
               (SELECT AVG(rating) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as average_rating,
               (SELECT COUNT(*) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as total_ratings,

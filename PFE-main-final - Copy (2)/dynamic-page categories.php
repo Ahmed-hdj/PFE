@@ -34,7 +34,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT l.*, c.category_name, u.username as author_name,
         u.profile_picture as author_profile_picture,
-        COALESCE(GROUP_CONCAT(li.image_url), 'images and videos/default-place.jpg') as images,
+        COALESCE(GROUP_CONCAT(CASE WHEN li.status_photo = 'approved' THEN li.image_url END), 'images and videos/default-place.jpg') as images,
         COALESCE(AVG(lr.rating), 0) as average_rating,
         COUNT(DISTINCT lr.rating_id) as total_ratings,
         CASE WHEN ls.lieu_id IS NOT NULL THEN 1 ELSE 0 END as is_saved
@@ -110,7 +110,7 @@ $categoryInfo = [
                         class="h-16 w-auto">
                 </a>
                 <button onclick="checkAuthAndShowAddPlaceForm()"
-                    class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2">
+                    class="bg-[#2fb52f] text-white px-6 py-2 rounded-full hover:opacity-80 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2">
                     <i class="fas fa-plus"></i>
                     Ajouter un lieu
                 </button>
@@ -164,9 +164,11 @@ $categoryInfo = [
                                 <a href="profile.php" class="block px-4 py-2 hover:bg-gray-100 w-full text-left">
                                     <i class="fas fa-user mr-2"></i> Profile
                                 </a>
-                                <a href="demandes.php" class="block px-4 py-2 hover:bg-gray-100">
-                                    <i class="fas fa-list mr-2"></i> Demands
-                                </a>
+                                <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                                    <a href="demandes.php" class="block px-4 py-2 hover:bg-gray-100">
+                                        <i class="fas fa-list mr-2"></i> Demands
+                                    </a>
+                                <?php endif; ?>
                                 <hr class="my-2">
                                 <a href="logout.php"
                                     class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
@@ -255,7 +257,7 @@ $categoryInfo = [
                                             onclick="event.preventDefault(); toggleSave(<?php echo $place['lieu_id']; ?>, this)"
                                             class="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors z-30 w-10 flex items-center justify-center">
                                             <i
-                                                class="fa-bookmark <?php echo $place['is_saved'] ? 'fas text-red-500' : 'far text-gray-600'; ?>"></i>
+                                                class="fa-bookmark <?php echo $place['is_saved'] ? 'fas text-gray-800' : 'far text-gray-600'; ?>"></i>
                                         </button>
                                     <?php endif; ?>
                                 </div>
@@ -297,6 +299,8 @@ $categoryInfo = [
             </div>
         </div>
 
+        <script src="script.js"></script>
+        <script src="search.js"></script>
         <script>
             // Initialize slideshows
             document.addEventListener('DOMContentLoaded', function () {
@@ -439,6 +443,20 @@ $categoryInfo = [
                 }
             }
 
+            function showLoginModal() {
+                window.location.href = 'index.php';
+            }
+
+            function showAuthWarningModal() {
+                document.getElementById('authWarningModal').classList.remove('hidden');
+                document.getElementById('authWarningModal').classList.add('flex');
+            }
+
+            function hideAuthWarningModal() {
+                document.getElementById('authWarningModal').classList.remove('flex');
+                document.getElementById('authWarningModal').classList.add('hidden');
+            }
+
             function checkAuthAndShowAddPlaceForm() {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     showAddPlaceModal();
@@ -447,9 +465,14 @@ $categoryInfo = [
                 <?php endif; ?>
             }
 
-            function showLoginModal() {
-                // Implement login modal functionality
-                window.location.href = 'index.php';
+            function showAddPlaceModal() {
+                document.getElementById('addPlaceModal').classList.remove('hidden');
+                document.getElementById('addPlaceModal').classList.add('flex');
+            }
+
+            function hideAddPlaceModal() {
+                document.getElementById('addPlaceModal').classList.remove('flex');
+                document.getElementById('addPlaceModal').classList.add('hidden');
             }
 
             function showModifyLieuModal(lieuId) {
@@ -498,10 +521,65 @@ $categoryInfo = [
                 }, 200);
             }
 
-            // Dummy functions for modals - replace with actual implementations
-            function showAddPlaceModal() { console.log('Showing Add Place Modal'); }
-            function showAuthWarningModal() { console.log('Showing Auth Warning Modal'); }
+            // Image preview functionality
+            document.getElementById('imageInput').addEventListener('change', function (event) {
+                const files = event.target.files;
+                const label = this.nextElementSibling;
 
+                if (files.length > 0) {
+                    label.innerHTML = '';
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-full h-full object-cover';
+                                label.appendChild(img);
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                } else {
+                    label.innerHTML = `
+                    <i class="fas fa-images text-4xl text-[#7d7d7d] mb-2"></i>
+                    <i class="fas fa-plus-circle text-2xl text-[#7d7d7d]"></i>
+                    <span class="text-[#7d7d7d] mt-2">Click to upload images</span>
+                `;
+                }
+            });
+
+            // Form submission
+            document.getElementById('addPlaceForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                formData.append('add_place', '1');
+
+                try {
+                    const response = await fetch('api/lieu.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Place added successfully!');
+                        hideAddPlaceModal();
+                        this.reset();
+                        window.location.reload();
+                    } else {
+                        alert(result.message || 'Error adding place');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error adding place');
+                }
+            });
+
+            // Profile menu toggle
             function toggleProfileMenu() {
                 const menu = document.getElementById('profileMenu');
                 menu.classList.toggle('hidden');
@@ -510,9 +588,9 @@ $categoryInfo = [
             // Close the menu when clicking outside
             document.addEventListener('click', function (event) {
                 const menu = document.getElementById('profileMenu');
-                const button = event.target.closest('button');
+                const profileButton = document.querySelector('[onclick="toggleProfileMenu()"]');
 
-                if (!button && !menu.contains(event.target)) {
+                if (menu && profileButton && !menu.contains(event.target) && !profileButton.contains(event.target)) {
                     menu.classList.add('hidden');
                 }
             });
@@ -614,15 +692,107 @@ $categoryInfo = [
             </div>
         </div>
 
-        <!-- Add Place Modal - Placeholder for now -->
-        <div id="addPlaceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-            <div class="bg-white rounded-lg shadow-xl w-11/12 md:w-2/3 lg:w-1/2 max-h-[90vh] flex flex-col p-6">
-                <h3 class="text-lg font-semibold mb-4">Add New Place (Placeholder)</h3>
-                <p>Form for adding a new place will go here.</p>
-                <button onclick="hideAddPlaceModal()" class="mt-4 bg-blue-500 text-white py-2 rounded-md">Close</button>
+        <!-- Add Place Modal -->
+        <div id="addPlaceModal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+            <div
+                class="bg-white p-8 rounded-lg w-[90%] max-w-[600px] max-h-[90vh] shadow-xl border-[6px] border-[#327532] overflow-hidden flex flex-col">
+                <div class="flex justify-between items-center mb-4 bg-white sticky top-0 z-10 pb-4 border-b">
+                    <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
+                    <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="overflow-y-auto flex-1">
+                    <form id="addPlaceForm" class="space-y-4" method="POST" enctype="multipart/form-data">
+                        <div>
+                            <div class="relative h-[192px]">
+                                <input type="file" name="images[]" id="imageInput"
+                                    class="w-full h-full px-3 py-2 border-4 border-dashed border-[#7d7d7d] rounded-lg bg-[#dcdcdc] cursor-pointer opacity-0 absolute inset-0 z-10"
+                                    multiple accept="image/*" required>
+                                <label for="imageInput"
+                                    class="w-full h-full border-4 border-dashed border-[#7d7d7d] rounded-lg bg-[#dcdcdc] flex flex-col items-center justify-center cursor-pointer absolute inset-0">
+                                    <i class="fas fa-images text-4xl text-[#7d7d7d] mb-2"></i>
+                                    <i class="fas fa-plus-circle text-2xl text-[#7d7d7d]"></i>
+                                    <span class="text-[#7d7d7d] mt-2">Click to upload images</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nom du lieu :</label>
+                            <input type="text" name="title"
+                                class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]"
+                                placeholder="Entrez le nom du lieu" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">Description :</label>
+                            <textarea name="description"
+                                class="w-full px-3 py-2 border rounded-lg outline-none border-[#a1a1a1]" rows="3"
+                                placeholder="Entrez la description du lieu" required></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">Location :</label>
+                            <textarea name="location"
+                                class="w-full px-3 py-2 border rounded-lg outline-none border-[#a1a1a1]" rows="3"
+                                placeholder="Entrez la location du lieu" required></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">Catégorie :</label>
+                            <select name="category"
+                                class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]" required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                <?php
+                                try {
+                                    $categories_query = "SELECT * FROM categories ORDER BY category_name";
+                                    $categories_stmt = $pdo->query($categories_query);
+                                    $categories = $categories_stmt->fetchAll();
+                                    foreach ($categories as $category) {
+                                        echo '<option value="' . htmlspecialchars($category['category_id']) . '">' .
+                                            htmlspecialchars($category['category_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    error_log('Error fetching categories: ' . $e->getMessage());
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 mb-2">Wilaya :</label>
+                            <select name="wilaya"
+                                class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]" required>
+                                <option value="">Sélectionnez une wilaya</option>
+                                <?php
+                                try {
+                                    $wilayas_query = "SELECT * FROM wilayas ORDER BY wilaya_name";
+                                    $wilayas_stmt = $pdo->query($wilayas_query);
+                                    $wilayas = $wilayas_stmt->fetchAll();
+                                    foreach ($wilayas as $wilaya) {
+                                        echo '<option value="' . htmlspecialchars($wilaya['wilaya_number']) . '">' .
+                                            htmlspecialchars($wilaya['wilaya_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    error_log('Error fetching wilayas: ' . $e->getMessage());
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="sticky bottom-0 bg-white pt-4 border-t mt-4">
+                    <button type="submit" form="addPlaceForm" name="add_place"
+                        class="w-full bg-gray-800 text-white py-2 rounded-full hover:bg-gray-700 transition-colors cursor-pointer font-bold">
+                        Ajouter le lieu
+                    </button>
+                </div>
             </div>
         </div>
-
 </body>
 
 </html>

@@ -12,7 +12,7 @@ $lieu_id = intval($_GET['lieu_id']);
 
 try {
     // Fetch images for the specified lieu
-    $stmt = $pdo->prepare("SELECT image_url FROM lieu_images WHERE lieu_id = ? ORDER BY uploaded_at ASC");
+    $stmt = $pdo->prepare("SELECT image_url FROM lieu_images WHERE lieu_id = ? AND status_photo = 'approved' ORDER BY uploaded_at ASC");
     $stmt->execute([$lieu_id]);
     $images = $stmt->fetchAll(PDO::FETCH_COLUMN);
 

@@ -48,7 +48,7 @@ switch($action) {
             $upload_path = $upload_dir . $new_filename;
             
             if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $upload_path)) {
-                $profile_picture = 'uploads/profile_pictures/' . $new_filename;
+                $profile_picture = $new_filename;
             }
         }
         

@@ -104,21 +104,23 @@ function addLieu() {
             }
 
             $uploaded_images = [];
+            $status_photo = ($user['role'] === 'admin') ? 'approved' : 'pending';
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
                 if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
                     $file_name = uniqid() . '_' . $_FILES['images']['name'][$key];
                     $file_path = $upload_dir . $file_name;
                     
                     if (move_uploaded_file($tmp_name, $file_path)) {
-                        // Insert image record
+                        // Insert image record with status_photo
                         $stmt = $pdo->prepare("
-                            INSERT INTO lieu_images (lieu_id, user_id, image_url) 
-                            VALUES (?, ?, ?)
+                            INSERT INTO lieu_images (lieu_id, user_id, image_url, status_photo)
+                            VALUES (?, ?, ?, ?)
                         ");
                         $stmt->execute([
                             $lieu_id,
                             $current_user_id,
-                            'uploads/lieu_images/' . $file_name
+                            'uploads/lieu_images/' . $file_name,
+                            $status_photo
                         ]);
                         $uploaded_images[] = 'uploads/lieu_images/' . $file_name;
                         error_log("Uploaded image: " . $file_name);
@@ -174,7 +176,7 @@ function addLieuImages() {
 
         $lieu_id = intval($_POST['lieu_id']);
 
-        // Check if lieu exists and get its author
+        // Check if lieu exists
         $lieu_stmt = $pdo->prepare("SELECT user_id FROM lieu WHERE lieu_id = ?");
         $lieu_stmt->execute([$lieu_id]);
         $lieu = $lieu_stmt->fetch(PDO::FETCH_ASSOC);
@@ -193,16 +195,6 @@ function addLieuImages() {
         $user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 
         $is_admin = $user && $user['role'] === 'admin';
-        $is_author = $lieu['user_id'] == $current_user_id;
-
-        // Allow adding images if user is admin or the author of the lieu
-        if (!$is_admin && !$is_author) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'User not authorized to add images to this lieu.'
-            ]);
-            return;
-        }
 
         // Handle image uploads
         if (isset($_FILES['images'])) {
@@ -214,21 +206,23 @@ function addLieuImages() {
             }
 
             $uploaded_images = [];
+            $status_photo = ($is_admin) ? 'approved' : 'pending';
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
                 if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
                     $file_name = uniqid() . '_' . $_FILES['images']['name'][$key];
                     $file_path = $upload_dir . $file_name;
                     
                     if (move_uploaded_file($tmp_name, $file_path)) {
-                        // Insert image record
+                        // Insert image record with status_photo
                         $stmt = $pdo->prepare("
-                            INSERT INTO lieu_images (lieu_id, user_id, image_url) 
-                            VALUES (?, ?, ?)
+                            INSERT INTO lieu_images (lieu_id, user_id, image_url, status_photo)
+                            VALUES (?, ?, ?, ?)
                         ");
                         $stmt->execute([
                             $lieu_id,
                             $current_user_id,
-                            'uploads/lieu_images/' . $file_name
+                            'uploads/lieu_images/' . $file_name,
+                            $status_photo
                         ]);
                         $uploaded_images[] = 'uploads/lieu_images/' . $file_name;
                         error_log("Uploaded image: " . $file_name);
@@ -238,25 +232,27 @@ function addLieuImages() {
                 }
             }
             
-             if (empty($uploaded_images)) {
-                  echo json_encode([
-                      'success' => false,
-                      'message' => 'No valid images uploaded.'
-                  ]);
-                  return;
-             }
+            if (empty($uploaded_images)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'No valid images uploaded.'
+                ]);
+                return;
+            }
         } else {
-             echo json_encode([
-                 'success' => false,
-                 'message' => 'No image files received.'
-             ]);
-             return;
+            echo json_encode([
+                'success' => false,
+                'message' => 'No image files received.'
+            ]);
+            return;
         }
 
         // Return success response
         echo json_encode([
             'success' => true,
-            'message' => 'Pictures added successfully!',
+            'message' => $status_photo === 'pending' ? 
+                'Pictures added successfully! They will be visible after admin approval.' : 
+                'Pictures added successfully!',
             'uploaded_images' => $uploaded_images
         ]);
         exit();

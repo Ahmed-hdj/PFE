@@ -22,7 +22,7 @@ if (isset($_SESSION['user_id'])) {
 // Check if lieu exists and is approved (or if user is admin or author)
 try {
     $query = "SELECT l.*, c.category_name, w.wilaya_name,
-              GROUP_CONCAT(li.image_url) as images,
+              GROUP_CONCAT(CASE WHEN li.status_photo = 'approved' THEN li.image_url END) as images,
               u.username as author_name,
               (SELECT AVG(rating) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as average_rating,
               (SELECT COUNT(*) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as total_ratings,
@@ -39,7 +39,7 @@ try {
     if ($isAdmin) {
         // Admins can see all places regardless of status
         $query = "SELECT l.*, c.category_name, w.wilaya_name,
-                  GROUP_CONCAT(li.image_url) as images,
+                  GROUP_CONCAT(CASE WHEN li.status_photo = 'approved' THEN li.image_url END) as images,
                   u.username as author_name,
                   (SELECT AVG(rating) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as average_rating,
                   (SELECT COUNT(*) FROM lieu_ratings WHERE lieu_id = l.lieu_id) as total_ratings,
@@ -185,9 +185,11 @@ $isAdmin_js = json_encode($isAdmin);
                                 <a href="profile.php" class="block px-4 py-2 hover:bg-gray-100 w-full text-left">
                                     <i class="fas fa-user mr-2"></i> Profile
                                 </a>
-                                <a href="demandes.php" class="block px-4 py-2 hover:bg-gray-100">
-                                    <i class="fas fa-list mr-2"></i> Demands
-                                </a>
+                                <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                                    <a href="demandes.php" class="block px-4 py-2 hover:bg-gray-100">
+                                        <i class="fas fa-list mr-2"></i> Demands
+                                    </a>
+                                <?php endif; ?>
                                 <hr class="my-2">
                                 <a href="logout.php"
                                     class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
@@ -209,9 +211,8 @@ $isAdmin_js = json_encode($isAdmin);
         <div class="container mx-auto px-4 py-8">
             <!-- Place Details Header -->
             <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-                <h1 class="text-3xl font-bold mb-4 text-gray-800"><?php echo htmlspecialchars($lieu['title']); ?>
-                </h1>
-                <div class="flex items-center gap-4 mb-6">
+                <h1 class="text-3xl font-bold mb-4 text-gray-800"><?php echo htmlspecialchars($lieu['title']); ?></h1>
+                <div class="flex items-center gap-4 mb-4">
                     <div class="flex items-center">
                         <div class="flex">
                             <?php
@@ -250,7 +251,7 @@ $isAdmin_js = json_encode($isAdmin);
                     <div class="h-5 w-px bg-gray-300 mx-2 hidden md:block "></div>
                     <div class="flex items-center">
                         <i class="fa-regular fa-user text-gray-700 mr-2"></i>
-                        <span class="text-gray-700 ">By <?php echo htmlspecialchars($lieu['author_name']); ?></span>
+                        <span class="text-gray-700">By <?php echo htmlspecialchars($lieu['author_name']); ?></span>
                     </div>
                 </div>
                 <p class="text-gray-700 mb-6 leading-relaxed">
@@ -260,7 +261,7 @@ $isAdmin_js = json_encode($isAdmin);
                     <div class="flex items-center <?php
                     $categoryInfo = getCategoryInfo($lieu['category_name']);
                     echo $categoryInfo['bgColor'];
-                    ?> p-2 rounded-full px-4 pl-2 pr-[26px] ">
+                    ?> py-2 rounded-full pl-4 pr-[26px]">
                         <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
                             <i class="<?php echo $categoryInfo['icon'] . ' ' . $categoryInfo['textColor']; ?>"></i>
                         </div>
@@ -351,96 +352,99 @@ $isAdmin_js = json_encode($isAdmin);
         <!-- Add Place Modal -->
         <div id="addPlaceModal"
             class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
-            <div class="bg-white p-8 rounded-lg w-[600px] shadow-xl border-[6px] border-[#327532]">
-                <div class="flex justify-between items-center mb-4">
+            <div
+                class="bg-white p-8 rounded-lg w-[90%] max-w-[600px] max-h-[90vh] shadow-xl border-[6px] border-[#327532] overflow-hidden flex flex-col">
+                <div class="flex justify-between items-center mb-4 bg-white sticky top-0 z-10 pb-4 border-b">
                     <h2 class="text-2xl font-bold">Ajouter un lieu</h2>
                     <button onclick="hideAddPlaceModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <form id="addPlaceForm" class="space-y-4" method="POST" enctype="multipart/form-data">
-                    <div>
+                <div class="overflow-y-auto flex-1">
+                    <form id="addPlaceForm" class="space-y-4" method="POST" enctype="multipart/form-data">
+                        <div>
 
-                        <div class="relative h-[192px]">
-                            <input type="file" name="images[]" id="imageInput"
-                                class="w-full h-full px-3 py-2 border-4 border-dashed border-[#7d7d7d] rounded-none bg-[#dcdcdc] cursor-pointer opacity-0 absolute inset-0 z-10"
-                                multiple accept="image/*" required>
-                            <label for="imageInput"
-                                class="w-full h-full border-4 border-dashed border-[#7d7d7d] rounded-none bg-[#dcdcdc] flex flex-col items-center justify-center cursor-pointer absolute inset-0">
-                                <i class="fas fa-images text-4xl text-[#7d7d7d] mb-2"></i>
-                                <i class="fas fa-plus-circle text-2xl text-[#7d7d7d]"></i>
-                                <span class="text-[#7d7d7d] mt-2">Click to upload images</span>
-                            </label>
+                            <div class="relative h-[192px]">
+                                <input type="file" name="images[]" id="imageInput"
+                                    class="w-full h-full px-3 py-2 border-4 border-dashed border-[#7d7d7d] rounded-none bg-[#dcdcdc] cursor-pointer opacity-0 absolute inset-0 z-10"
+                                    multiple accept="image/*" required>
+                                <label for="imageInput"
+                                    class="w-full h-full border-4 border-dashed border-[#7d7d7d] rounded-none bg-[#dcdcdc] flex flex-col items-center justify-center cursor-pointer absolute inset-0">
+                                    <i class="fas fa-images text-4xl text-[#7d7d7d] mb-2"></i>
+                                    <i class="fas fa-plus-circle text-2xl text-[#7d7d7d]"></i>
+                                    <span class="text-[#7d7d7d] mt-2">Click to upload images</span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Nom du lieu :</label>
-                        <input type="text" name="title"
-                            class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
-                            required placeholder="Entrez le nom du lieu">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Description :</label>
-                        <textarea name="description"
-                            class="w-full px-3 py-2 border  outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
-                            rows="3" placeholder="Entrez la description du lieu" required></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Location :</label>
-                        <textarea name="location"
-                            class="w-full px-3 py-2 border  outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
-                            rows="3" placeholder="Entrez la location du lieu" required></textarea>
-                    </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nom du lieu :</label>
+                            <input type="text" name="title"
+                                class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                required placeholder="Entrez le nom du lieu">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Description :</label>
+                            <textarea name="description"
+                                class="w-full px-3 py-2 border  outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                rows="3" placeholder="Entrez la description du lieu" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Location :</label>
+                            <textarea name="location"
+                                class="w-full px-3 py-2 border  outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                rows="3" placeholder="Entrez la location du lieu" required></textarea>
+                        </div>
 
-                    <div>
-                        <label class="block text-gray-700 mb-2">Wilaya :</label>
-                        <select name="wilaya" class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]"
-                            required>
-                            <option value="">Sélectionnez une wilaya</option>
-                            <?php
-                            try {
-                                $wilayas_query = "SELECT * FROM wilayas ORDER BY wilaya_number";
-                                $wilayas_stmt = $pdo->query($wilayas_query);
-                                $wilayas = $wilayas_stmt->fetchAll();
-                                foreach ($wilayas as $wilaya) {
-                                    echo '<option value="' . htmlspecialchars($wilaya['wilaya_number']) . '">' .
-                                        htmlspecialchars($wilaya['wilaya_number'] . ' - ' . $wilaya['wilaya_name']) .
-                                        '</option>';
+                        <div>
+                            <label class="block text-gray-700 mb-2">Wilaya :</label>
+                            <select name="wilaya"
+                                class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]" required>
+                                <option value="">Sélectionnez une wilaya</option>
+                                <?php
+                                try {
+                                    $wilayas_query = "SELECT * FROM wilayas ORDER BY wilaya_number";
+                                    $wilayas_stmt = $pdo->query($wilayas_query);
+                                    $wilayas = $wilayas_stmt->fetchAll();
+                                    foreach ($wilayas as $wilaya) {
+                                        echo '<option value="' . htmlspecialchars($wilaya['wilaya_number']) . '">' .
+                                            htmlspecialchars($wilaya['wilaya_number'] . ' - ' . $wilaya['wilaya_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    error_log('Error fetching wilayas: ' . $e->getMessage());
                                 }
-                            } catch (PDOException $e) {
-                                error_log('Error fetching wilayas: ' . $e->getMessage());
-                            }
-                            ?>
-                        </select>
-                    </div>
+                                ?>
+                            </select>
+                        </div>
 
-                    <div>
-                        <label class="block text-gray-700 mb-2">Catégorie :</label>
-                        <select name="category"
-                            class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]" required>
-                            <option value="">Sélectionnez une catégorie</option>
-                            <?php
-                            try {
-                                $categories_query = "SELECT * FROM categories ORDER BY category_name";
-                                $categories_stmt = $pdo->query($categories_query);
-                                $categories = $categories_stmt->fetchAll();
-                                foreach ($categories as $category) {
-                                    echo '<option value="' . htmlspecialchars($category['category_id']) . '">' .
-                                        htmlspecialchars($category['category_name']) .
-                                        '</option>';
+                        <div>
+                            <label class="block text-gray-700 mb-2">Catégorie :</label>
+                            <select name="category"
+                                class="w-full px-3 py-2 border rounded-full outline-none border-[#a1a1a1]" required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                <?php
+                                try {
+                                    $categories_query = "SELECT * FROM categories ORDER BY category_name";
+                                    $categories_stmt = $pdo->query($categories_query);
+                                    $categories = $categories_stmt->fetchAll();
+                                    foreach ($categories as $category) {
+                                        echo '<option value="' . htmlspecialchars($category['category_id']) . '">' .
+                                            htmlspecialchars($category['category_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    error_log('Error fetching categories: ' . $e->getMessage());
                                 }
-                            } catch (PDOException $e) {
-                                error_log('Error fetching categories: ' . $e->getMessage());
-                            }
-                            ?>
-                        </select>
-                    </div>
+                                ?>
+                            </select>
+                        </div>
 
-                    <button type="submit" name="add_place"
-                        class="bg-[#2fb52f] text-white py-2 rounded-full hover:opacity-80 transition-colors cursor-pointer font-bold w-full">
-                        Ajouter le lieu
-                    </button>
-                </form>
+                        <button type="submit" name="add_place"
+                            class="bg-[#2fb52f] text-white py-2 rounded-full hover:opacity-80 transition-colors cursor-pointer font-bold w-full">
+                            Ajouter le lieu
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -528,8 +532,7 @@ $isAdmin_js = json_encode($isAdmin);
                             placeholder="Créez votre mot de passe">
                     </div>
                     <div>
-                        <label class="block text-gray-700 mb-2 font-semibold tracking-[1px]">Confirmer le mot de
-                            passe
+                        <label class="block text-gray-700 mb-2 font-semibold tracking-[1px]">Confirmer le mot de passe
                             :</label>
                         <input type="password"
                             class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1] mb-[14px]"
@@ -627,6 +630,123 @@ $isAdmin_js = json_encode($isAdmin);
                 </form>
             </div>
         </div>
+
+        <!-- Modify Lieu Modal -->
+        <div id="modifyLieuModal"
+            class="fixed inset-0 bg-black/70 backdrop-blur-[1px] hidden items-center justify-center z-50 transition-opacity duration-200">
+            <div
+                class="bg-white p-8 rounded-lg w-[90%] max-w-[600px] max-h-[90vh] shadow-xl overflow-hidden flex flex-col">
+                <div class="flex justify-between items-center mb-4 bg-white sticky top-0 z-10 pb-4 border-b">
+                    <h2 class="text-2xl font-bold">Modifier le lieu</h2>
+                    <button onclick="hideModifyLieuModal()" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="overflow-y-auto flex-1">
+                    <form id="modifyLieuForm" class="space-y-4">
+                        <input type="hidden" id="modifyLieuId" name="lieu_id">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nom du lieu</label>
+                            <input type="text" id="modifyTitle" name="title"
+                                class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                placeholder="Entrez le nom du lieu" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Description</label>
+                            <textarea id="modifyContent" name="content"
+                                class="w-full px-3 py-2 border rounded-lg outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                rows="3" placeholder="Entrez la description du lieu" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Location</label>
+                            <textarea id="modifyLocation" name="location"
+                                class="w-full px-3 py-2 border rounded-lg outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                rows="3" placeholder="Entrez la location du lieu" required></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Wilaya</label>
+                            <select id="modifyWilaya" name="wilaya_id"
+                                class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                required>
+                                <option value="">Sélectionnez une wilaya</option>
+                                <?php
+                                // Fetch wilayas inside the modal form where it's used
+                                require_once 'config/database.php';
+                                try {
+                                    $stmt = $pdo->query("SELECT * FROM wilayas ORDER BY wilaya_number");
+                                    while ($wilaya = $stmt->fetch()) {
+                                        echo '<option value="' . $wilaya['wilaya_number'] . '">' .
+                                            htmlspecialchars($wilaya['wilaya_number'] . ' - ' . $wilaya['wilaya_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    echo "Error loading wilayas";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Catégorie</label>
+                            <select id="modifyCategory" name="category_id"
+                                class="w-full px-3 py-2 border rounded-full outline-none focus:shadow-[0_0_6px_1px_#23c523] transition-all duration-300 border-[#a1a1a1]"
+                                required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                <?php
+                                // Fetch categories inside the modal form where it's used
+                                require_once 'config/database.php';
+                                try {
+                                    $stmt = $pdo->query("SELECT * FROM categories ORDER BY category_name");
+                                    while ($category = $stmt->fetch()) {
+                                        echo '<option value="' . $category['category_id'] . '">' .
+                                            htmlspecialchars($category['category_name']) .
+                                            '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    echo "Error loading categories";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Images</label>
+                            <div id="currentImages"
+                                class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2 max-h-[200px] overflow-y-auto p-2 bg-gray-50 rounded-lg">
+                                <!-- Current images will be displayed here -->
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <label class="flex-1">
+                                        <input type="file" name="new_images[]" class="hidden" multiple accept="image/*"
+                                            id="imageUpload" onchange="previewNewImages(this)">
+                                        <div
+                                            class="w-full px-3 py-2 border rounded-full cursor-pointer hover:bg-gray-50 transition-colors text-center">
+                                            <i class="fas fa-cloud-upload-alt mr-2"></i>
+                                            Select Images
+                                        </div>
+                                    </label>
+                                    <button type="button" onclick="document.getElementById('imageUpload').click()"
+                                        class="px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div id="newImagesPreview"
+                                    class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[200px] overflow-y-auto p-2 bg-gray-50 rounded-lg hidden">
+                                    <!-- New image previews will be displayed here -->
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">You can select multiple images at once</p>
+                        </div>
+                    </form>
+                </div>
+                <div class="sticky bottom-0 bg-white pt-4 border-t mt-4">
+                    <button type="submit" form="modifyLieuForm"
+                        class="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600 transition-colors cursor-pointer">
+                        Modifier le lieu
+                    </button>
+                </div>
+            </div>
+        </div>
+
 
         <script src="script.js"></script>
         <script src="search.js"></script>
@@ -1034,7 +1154,7 @@ $isAdmin_js = json_encode($isAdmin);
                     const result = await response.json();
 
                     if (result.success) {
-                        alert(result.message || 'Pictures uploaded successfully!');
+                        alert(result.message);
                         hideAddPictureModal();
                         this.reset();
                         location.reload();
@@ -1049,6 +1169,204 @@ $isAdmin_js = json_encode($isAdmin);
 
             // Add event listener for the Add Picture button
             document.getElementById('addPictureButton').addEventListener('click', showAddPictureModal);
+
+            // Profile menu toggle
+            function toggleProfileMenu() {
+                const menu = document.getElementById('profileMenu');
+                menu.classList.toggle('hidden');
+            }
+
+            // Close the menu when clicking outside
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById('profileMenu');
+                const profileButton = document.querySelector('[onclick="toggleProfileMenu()"]');
+
+                if (menu && profileButton && !menu.contains(event.target) && !profileButton.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+
+            // --- Start Modify Modal Functions (Copied from index.php) ---
+            function showModifyLieuModal(lieuId) {
+                // Check if the current user is authorized to modify this lieu
+                // The PHP check for admin or author is already done in displaying the button,
+                // but adding a JS check provides a quicker user feedback
+                if (!isAdmin && !(currentUserId && currentUserId === <?php echo $lieu['user_id']; ?>)) {
+                    showAuthWarningModal(); // Or a more specific "Not Authorized" modal
+                    return;
+                }
+
+
+                const modal = document.getElementById('modifyLieuModal');
+
+                // Fetch the current lieu data using the provided lieu_id
+                fetch(`get_lieu_details.php?lieu_id=${lieuId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const lieu = data.lieu;
+                            // Set the values in the form
+                            document.getElementById('modifyLieuId').value = lieu.lieu_id;
+                            document.getElementById('modifyTitle').value = lieu.title;
+                            document.getElementById('modifyContent').value = lieu.content;
+                            document.getElementById('modifyLocation').value = lieu.location;
+                            document.getElementById('modifyCategory').value = lieu.category_id;
+                            document.getElementById('modifyWilaya').value = lieu.wilaya_id;
+
+                            // Show the modal
+                            modal.style.opacity = '0';
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                            // Trigger reflow
+                            modal.offsetHeight;
+                            modal.style.opacity = '1';
+
+                            // Load current images for the modify modal
+                            loadCurrentImages(lieuId);
+                        } else {
+                            alert('Error loading lieu data: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error loading lieu data. Please try again.');
+                    });
+            }
+
+            function hideModifyLieuModal() {
+                const modal = document.getElementById('modifyLieuModal');
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+
+            let deletedImages = [];
+
+            function removeImage(imageUrl) {
+                if (confirm('Are you sure you want to remove this image?')) {
+                    deletedImages.push(imageUrl);
+                    // Find the image element by src and remove its parent div
+                    const imgElement = document.querySelector(`#currentImages img[src="${imageUrl}"]`);
+                    if (imgElement) {
+                        imgElement.parentElement.remove();
+                    }
+                }
+            }
+
+            function loadCurrentImages(lieuId) {
+                const imagesContainer = document.getElementById('currentImages');
+                imagesContainer.innerHTML = '<p class="text-gray-500">Loading images...</p>';
+
+                // Reset deleted images array
+                deletedImages = [];
+
+                // Fetch current images for the lieu
+                fetch(`get_lieu_images.php?lieu_id=${lieuId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            imagesContainer.innerHTML = data.images.map(image => `
+                            <div class="relative group">
+                                <img src="${image}" alt="Current image" class="w-full h-24 object-cover rounded">
+                                <button type="button" onclick="removeImage('${image}')" class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `).join('');
+                        } else {
+                            imagesContainer.innerHTML = '<p class="text-red-500">Error loading images</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        imagesContainer.innerHTML = '<p class="text-red-500">Error loading images</p>';
+                    });
+            }
+
+            function previewNewImages(input) {
+                const previewContainer = document.getElementById('newImagesPreview');
+                previewContainer.innerHTML = '';
+                if (input.files && input.files.length > 0) {
+                    previewContainer.classList.remove('hidden');
+                    Array.from(input.files).forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const div = document.createElement('div');
+                            div.className = 'relative group';
+                            div.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview" class="w-full h-24 object-cover rounded">
+                            <button type="button" onclick="removeNewImage(${index})" class="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                            previewContainer.appendChild(div);
+                        }
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    previewContainer.classList.add('hidden');
+                }
+            }
+
+            function removeNewImage(index) {
+                const input = document.getElementById('imageUpload');
+                const dt = new DataTransfer();
+                const files = input.files;
+
+                for (let i = 0; i < files.length; i++) {
+                    if (i !== index) {
+                        dt.items.add(files[i]);
+                    }
+                }
+
+                input.files = dt.files;
+                previewNewImages(input); // Refresh the preview
+            }
+
+            // Submit handler for modify lieu form
+            document.getElementById('modifyLieuForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                // Add deleted images to formData
+                deletedImages.forEach(imageUrl => {
+                    formData.append('deleted_images[]', imageUrl);
+                });
+
+                // Add all selected files to FormData
+                const imageInput = document.getElementById('imageUpload');
+                if (imageInput.files.length > 0) {
+                    for (let i = 0; i < imageInput.files.length; i++) {
+                        formData.append('new_images[]', imageInput.files[i]);
+                    }
+                }
+
+                fetch('index.php', { // Using index.php to handle the modification POST
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Lieu modified successfully');
+                            hideModifyLieuModal();
+                            // Refresh the page or update the specific content on the page
+                            location.reload(); // Simple reload for now
+                        } else {
+                            alert(data.message || 'Error modifying lieu');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error modifying lieu. Please try again.');
+                    });
+            });
+            // --- End Modify Modal Functions ---
+
+
         </script>
 </body>
 

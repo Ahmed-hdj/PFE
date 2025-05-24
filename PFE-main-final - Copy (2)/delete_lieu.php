@@ -23,7 +23,19 @@ try {
     // Start transaction
     $pdo->beginTransaction();
 
-    // Delete associated images first
+    // Delete associated saves
+    $stmt = $pdo->prepare("DELETE FROM lieu_saves WHERE lieu_id = ?");
+    $stmt->execute([$lieu_id]);
+
+    // Delete associated ratings
+    $stmt = $pdo->prepare("DELETE FROM lieu_ratings WHERE lieu_id = ?");
+    $stmt->execute([$lieu_id]);
+
+    // Delete associated comments
+    $stmt = $pdo->prepare("DELETE FROM lieu_comments WHERE lieu_id = ?");
+    $stmt->execute([$lieu_id]);
+
+    // Delete associated images
     $stmt = $pdo->prepare("DELETE FROM lieu_images WHERE lieu_id = ?");
     $stmt->execute([$lieu_id]);
 
