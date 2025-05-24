@@ -4,6 +4,7 @@ require_once 'config/database.php';
 
 // Initialize user variable
 $user = null;
+$user_initials = ''; // Initialize user_initials variable
 
 // Get user information if logged in
 if (isset($_SESSION['user_id'])) {
@@ -11,6 +12,15 @@ if (isset($_SESSION['user_id'])) {
         $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch();
+
+        // Generate user initials if user exists
+        if ($user) {
+            $name_parts = explode(' ', $user['username']);
+            foreach ($name_parts as $part) {
+                $user_initials .= strtoupper(substr($part, 0, 1));
+            }
+            $user_initials = substr($user_initials, 0, 2);
+        }
     } catch (PDOException $e) {
         error_log('Error fetching user data: ' . $e->getMessage());
     }
@@ -205,14 +215,7 @@ if ($user) {
                                 <?php else: ?>
                                     <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                                         <span class="text-gray-600 font-medium text-lg">
-                                            <?php
-                                            $initials = '';
-                                            $name_parts = explode(' ', $user['username']);
-                                            foreach ($name_parts as $part) {
-                                                $initials .= strtoupper(substr($part, 0, 1));
-                                            }
-                                            echo substr($initials, 0, 2);
-                                            ?>
+                                            <?php echo $user_initials; ?>
                                         </span>
                                     </div>
                                 <?php endif; ?>
@@ -278,9 +281,11 @@ if ($user) {
                             <!-- Profile Header Info -->
                             <div class="mb-8">
                                 <h2 id="displayName" class="text-3xl font-bold text-gray-800 mb-2">
-                                    <?php echo htmlspecialchars($user['username']); ?></h2>
+                                    <?php echo htmlspecialchars($user['username']); ?>
+                                </h2>
                                 <p class="text-gray-600">Member since
-                                    <?php echo date('Y-m-d', strtotime($user['created_at'])); ?></p>
+                                    <?php echo date('Y-m-d', strtotime($user['created_at'])); ?>
+                                </p>
                             </div>
 
                             <!-- Profile Information -->
@@ -289,17 +294,20 @@ if ($user) {
                                     <div>
                                         <label class="block text-sm font-medium text-gray-600">Full Name</label>
                                         <p id="viewFullName" class="mt-1 text-gray-800">
-                                            <?php echo htmlspecialchars($user['full_name'] ?? $user['username']); ?></p>
+                                            <?php echo htmlspecialchars($user['full_name'] ?? $user['username']); ?>
+                                        </p>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-600">Email</label>
                                         <p id="viewEmail" class="mt-1 text-gray-800">
-                                            <?php echo htmlspecialchars($user['email']); ?></p>
+                                            <?php echo htmlspecialchars($user['email']); ?>
+                                        </p>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-600">Role</label>
                                         <p id="viewUsername" class="mt-1 text-gray-800">
-                                            <?php echo htmlspecialchars($user['role']); ?></p>
+                                            <?php echo htmlspecialchars($user['role']); ?>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +323,7 @@ if ($user) {
 
                         <!-- Edit Form (Hidden by default) -->
                         <div id="profileEdit" class="hidden space-y-6">
-                            <form id="editProfileForm" class="space-y-6">
+                            <form id="editProfileForm" class="space-y-6" enctype="multipart/form-data">
                                 <!-- Profile Picture Upload -->
                                 <div class="flex items-center space-x-6">
                                     <div class="relative w-32 h-32">
@@ -324,7 +332,7 @@ if ($user) {
                                             alt="Profile Picture"
                                             class="w-full h-full rounded-full object-cover border-4 border-white shadow-lg <?php echo $user && $user['profile_picture'] ? '' : 'hidden'; ?>">
                                         <label for="profilePictureInput"
-                                            class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity <?php echo $user && $user['profile_picture'] ? '' : '' /* or different style if needed */ ?>">
+                                            class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity <?php echo $user && $user['profile_picture'] ? '' : '' ?>">
                                             <i class="fas fa-camera text-white text-2xl"></i>
                                         </label>
                                         <input type="file" id="profilePictureInput" name="profile_picture"
@@ -347,13 +355,13 @@ if ($user) {
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-600">Full Name</label>
-                                            <input type="text" id="editFullName"
-                                                value="<?php echo htmlspecialchars($user['full_name'] ?? $user['username']); ?>"
+                                            <input type="text" name="username" id="editFullName"
+                                                value="<?php echo htmlspecialchars($user['username']); ?>"
                                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-600">Email</label>
-                                            <input type="email" id="editEmail"
+                                            <input type="email" name="email" id="editEmail"
                                                 value="<?php echo htmlspecialchars($user['email']); ?>"
                                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                         </div>
@@ -935,41 +943,63 @@ if ($user) {
             // Add other modal functions as needed (e.g., showModifyLieuModal, hideModifyLieuModal)
 
             // Helper functions (Ensure these are present or copied)
-            function previewProfilePicture(input) { /* ... */ }
-            function toggleEditMode() { /* ... */ }
-            // Add other helper functions as needed (e.g., removeImage, previewNewImages, removeNewImages, removeAddPlaceImage, previewAddPlaceImages)
-            // Based on index.php, you will also need these:
-            let deletedImages = []; // Needed for modify modal
+            function previewProfilePicture(input) {
+                const preview = document.getElementById('editProfilePicture');
+                const placeholder = document.getElementById('editProfilePicturePlaceholder');
 
-            function removeImage(imageUrl) { /* ... */ }
-            function loadCurrentImages(lieuId) { /* ... */ }
-            function previewNewImages(input) { /* ... */ }
-            function removeNewImage(index) { /* ... */ }
-            function previewAddPlaceImages(input) { /* ... */ }
-            function removeAddPlaceImage(index) { /* ... */ }
-
-            // Profile menu toggle
-            function toggleProfileMenu() {
-                const menu = document.getElementById('profileMenu');
-                menu.classList.toggle('hidden');
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (preview) {
+                            preview.src = e.target.result;
+                            preview.classList.remove('hidden');
+                        }
+                        if (placeholder) {
+                            placeholder.classList.add('hidden');
+                        }
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
 
-            // Close the menu when clicking outside
-            document.addEventListener('click', function (event) {
-                const menu = document.getElementById('profileMenu');
-                const profileButton = document.querySelector('[onclick="toggleProfileMenu()"]');
+            // Function to toggle edit mode
+            function toggleEditMode() {
+                const profileView = document.getElementById('profileView');
+                const profileEdit = document.getElementById('profileEdit');
 
-                if (menu && profileButton && !menu.contains(event.target) && !profileButton.contains(event.target)) {
-                    menu.classList.add('hidden');
+                if (profileView && profileEdit) {
+                    profileView.classList.toggle('hidden');
+                    profileEdit.classList.toggle('hidden');
+                }
+            }
+
+            // Handle profile form submission
+            document.getElementById('editProfileForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                formData.append('update_profile', '1');
+
+                try {
+                    const response = await fetch('update_profile.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Profile updated successfully!');
+                        // Reload the page to show updated information
+                        window.location.reload();
+                    } else {
+                        alert(result.message || 'Error updating profile');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error updating profile. Please try again.');
                 }
             });
-
-            // Event listeners for forms (Ensure these are present or copied or adapted)
-            // The actual form submission logic might differ slightly for profile page
-            // document.getElementById('loginForm').addEventListener('submit', function (e) { /* ... */ });
-            // document.getElementById('signupForm').addEventListener('submit', function (e) { /* ... */ });
-            // document.getElementById('addPlaceForm').addEventListener('submit', function (e) { /* ... */ });
-            // document.getElementById('editProfileForm').addEventListener('submit', function (e) { /* ... */ });
 
             // Event listener to display saved places when the DOM is ready
             document.addEventListener('DOMContentLoaded', function () {

@@ -6,101 +6,117 @@ require_once 'config/database.php';
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
-        'message' => 'User not logged in'
+        'message' => 'You must be logged in to update your profile'
     ]);
     exit();
 }
 
-// Handle profile update
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        // Start transaction
-        $pdo->beginTransaction();
+// Check if this is a profile update request
+if (!isset($_POST['update_profile'])) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid request'
+    ]);
+    exit();
+}
 
-        // Get user data
-        $user_id = $_SESSION['user_id'];
-        $full_name = $_POST['full_name'] ?? '';
-        $email = $_POST['email'] ?? '';
+try {
+    // Start transaction
+    $pdo->beginTransaction();
 
-        // Validate email format
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $user_id = $_SESSION['user_id'];
+    $updates = [];
+    $params = [];
+
+    // Handle profile picture upload
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['profile_picture'];
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        // Validate file type
+        $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        if (!in_array($file_ext, $allowed_types)) {
+            throw new Exception('Invalid file type. Only JPG, JPEG, PNG, GIF and WebP files are allowed.');
+        }
+
+        // Create upload directory if it doesn't exist
+        $upload_dir = 'uploads/profile_pictures/';
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        // Generate unique filename
+        $new_filename = uniqid() . '.' . $file_ext;
+        $upload_path = $upload_dir . $new_filename;
+
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            // Delete old profile picture if exists
+            $stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE user_id = ?");
+            $stmt->execute([$user_id]);
+            $old_picture = $stmt->fetchColumn();
+
+            if ($old_picture && file_exists($upload_dir . $old_picture)) {
+                unlink($upload_dir . $old_picture);
+            }
+
+            $updates[] = "profile_picture = ?";
+            $params[] = $new_filename;
+        }
+    }
+
+    // Handle other profile fields
+    if (isset($_POST['username']) && !empty($_POST['username'])) {
+        $updates[] = "username = ?";
+        $params[] = $_POST['username'];
+    }
+
+    if (isset($_POST['email']) && !empty($_POST['email'])) {
+        // Validate email
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             throw new Exception('Invalid email format');
         }
 
         // Check if email is already taken by another user
         $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ? AND user_id != ?");
-        $stmt->execute([$email, $user_id]);
+        $stmt->execute([$_POST['email'], $user_id]);
         if ($stmt->fetch()) {
-            throw new Exception('Email already taken');
+            throw new Exception('Email is already taken');
         }
 
-        // Handle profile picture upload
-        $profile_picture = null;
-        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = 'uploads/profile_pictures/';
-            if (!file_exists($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
+        $updates[] = "email = ?";
+        $params[] = $_POST['email'];
+    }
 
-            $file_name = $_FILES['profile_picture']['name'];
-            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            
-            // Validate file type
-            $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
-            if (!in_array($file_ext, $allowed_types)) {
-                throw new Exception('Invalid file type. Allowed types: ' . implode(', ', $allowed_types));
-            }
+    // If there are updates to make
+    if (!empty($updates)) {
+        $params[] = $user_id; // Add user_id for WHERE clause
 
-            // Generate unique filename
-            $new_file_name = uniqid() . '.' . $file_ext;
-            $upload_path = $upload_dir . $new_file_name;
-
-            if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $upload_path)) {
-                $profile_picture = $new_file_name;
-            } else {
-                throw new Exception('Error uploading profile picture');
-            }
-        }
-
-        // Update user information
-        $update_query = "UPDATE users SET full_name = ?, email = ?";
-        $params = [$full_name, $email];
-
-        if ($profile_picture) {
-            $update_query .= ", profile_picture = ?";
-            $params[] = $profile_picture;
-        }
-
-        $update_query .= " WHERE user_id = ?";
-        $params[] = $user_id;
-
-        $stmt = $pdo->prepare($update_query);
+        $query = "UPDATE users SET " . implode(", ", $updates) . " WHERE user_id = ?";
+        $stmt = $pdo->prepare($query);
         $stmt->execute($params);
 
         // Commit transaction
         $pdo->commit();
 
-        // Return success response
         echo json_encode([
             'success' => true,
-            'message' => 'Profile updated successfully',
-            'profile_picture' => $profile_picture
+            'message' => 'Profile updated successfully'
         ]);
-
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        $pdo->rollBack();
-        
+    } else {
         echo json_encode([
             'success' => false,
-            'message' => $e->getMessage()
+            'message' => 'No changes to update'
         ]);
     }
-} else {
+
+} catch (Exception $e) {
+    // Rollback transaction on error
+    $pdo->rollBack();
+
     echo json_encode([
         'success' => false,
-        'message' => 'Invalid request method'
+        'message' => $e->getMessage()
     ]);
 }
-
-?> 
+?>
