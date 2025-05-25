@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Login form submission
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.querySelector('#loginModal form');
     if (loginForm) {
         loginForm.addEventListener('submit', async function (e) {
@@ -314,15 +314,15 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('action', 'login');
             formData.append('email', email);
             formData.append('password', password);
-            
+
             try {
                 const response = await fetch('api/auth.php', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     hideLoginModal();
                     // Redirect to the appropriate page based on user role
@@ -346,15 +346,15 @@ function logout() {
             'action': 'logout'
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.reload();
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // Check authentication state on page load
@@ -426,41 +426,41 @@ function handleAuthWarningLogin() {
 }
 
 // Handle add place form submission
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#addPlaceForm');
     if (!form) {
         console.error('Form not found!');
         return;
     }
-    
+
     console.log('Form found, adding submit listener');
-    
-    form.addEventListener('submit', async function(e) {
+
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
         console.log('Form submission started');
-        
+
         const formData = new FormData(this);
         formData.append('action', 'add');
-        
+
         // Log form data
         console.log('Form data contents:');
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + pair[1]);
         }
-        
+
         try {
             console.log('Sending request to api/lieu.php');
             const response = await fetch('api/lieu.php', {
                 method: 'POST',
                 body: formData
             });
-            
+
             console.log('Response status:', response.status);
             console.log('Response headers:', response.headers);
-            
+
             const responseText = await response.text();
             console.log('Raw response:', responseText);
-            
+
             let data;
             try {
                 data = JSON.parse(responseText);
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Error processing server response');
                 return;
             }
-            
+
             if (data.success) {
                 hideAddPlaceModal();
                 if (data.status === 'pending') {
@@ -490,40 +490,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Handle Signup Form Submission
-document.getElementById('signupForm').addEventListener('submit', async function(e) {
+document.getElementById('signupForm').addEventListener('submit', async function (e) {
     e.preventDefault();
-    
+
     const username = this.querySelector('input[type="text"]').value;
     const email = this.querySelector('input[type="email"]').value;
     const password = this.querySelectorAll('input[type="password"]')[0].value;
     const confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
     const profilePicture = this.querySelector('input[type="file"]').files[0];
-    const city = 'Alger'; // Default city, you can add a city input field if needed
-    
+
+
     if (password !== confirmPassword) {
         alert('Passwords do not match');
         return;
     }
-    
+
     const formData = new FormData();
     formData.append('action', 'register');
     formData.append('username', username);
     formData.append('email', email);
     formData.append('password', password);
     formData.append('confirm_password', confirmPassword);
-    formData.append('city', city);
+
     if (profilePicture) {
         formData.append('profile_picture', profilePicture);
     }
-    
+
     try {
         const response = await fetch('api/auth.php', {
             method: 'POST',
             body: formData
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             hideSignupModal();
             showLoginModal();
@@ -540,31 +540,31 @@ document.getElementById('signupForm').addEventListener('submit', async function(
 function updateAuthUI() {
     const loginButton = document.querySelector('button[onclick="showLoginModal()"]');
     const addPlaceButton = document.querySelector('button[onclick="checkAuthAndShowAddPlaceForm()"]');
-    
+
     fetch('api/auth.php', {
         method: 'POST',
         body: new URLSearchParams({
             'action': 'check_auth'
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            loginButton.textContent = 'Logout';
-            loginButton.onclick = logout;
-            addPlaceButton.style.display = 'block';
-        } else {
-            loginButton.textContent = 'Se Connecter';
-            loginButton.onclick = showLoginModal;
-            addPlaceButton.style.display = 'block';
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loginButton.textContent = 'Logout';
+                loginButton.onclick = logout;
+                addPlaceButton.style.display = 'block';
+            } else {
+                loginButton.textContent = 'Se Connecter';
+                loginButton.onclick = showLoginModal;
+                addPlaceButton.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     updateAuthUI();
 }); 
